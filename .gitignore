@@ -11,8 +11,5 @@ yarn-error.log
 *.sln
 __bk/
 node_modules/
-package.json
-package-lock.json
 .babelrc
 .editorconfig
-webpack.config.js
