@@ -1,17 +1,17 @@
 <template>
-<div class="login">
-  <h1>
-    Log In
-  </h1>
-  <input type="text" v-model="email" placeholder="Email">
-  <br>
-  <input type="password" v-model="password" placeholder="Password">
-  <br>
-  <button @click="signIn">Sign In</button>
-  <span>
-    You don't have an account? <router-link to="/Signup">signup</router-link>.
-  </span>
-</div>
+  <div class="login">
+    <h1>
+      Log In
+    </h1>
+    <input type="text" v-model="email" placeholder="Email">
+    <br>
+    <input type="password" v-model="password" placeholder="Password">
+    <br>
+    <button @click="signIn">Sign In</button>
+    <span>
+      You don't have an account? <router-link to="/Signup">signup</router-link>.
+    </span>
+  </div>
 </template>
 
 <script>

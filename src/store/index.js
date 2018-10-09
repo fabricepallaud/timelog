@@ -8,7 +8,8 @@ export default new Vuex.Store({
   state: {
     today: new Date(),
     thisWeek: moment().startOf('isoWeek'),
-    currentWeek: moment().startOf('isoWeek')
+    currentWeek: moment().startOf('isoWeek'),
+    userConnected: false
   },
   mutations: {
     nextWeek() {
@@ -19,6 +20,9 @@ export default new Vuex.Store({
     },
     thisWeek() {
       this.state.currentWeek = moment(this.state.thisWeek).format('DD MMM');
+    },
+    userConnectedUpdate(state, payload) {
+      this.state.userConnected = payload;
     }
   }
 });

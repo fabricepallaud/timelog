@@ -6,9 +6,13 @@
   </head>
   <body>
     <div id="app">
-      <router-link to="/"><h1>Timelog</h1></router-link>
+      <header>
+        <router-link to="/"><h1>Timelog</h1></router-link>
+        <user-status></user-status>
+      </header>
+      <br>
       <router-view></router-view>
     </div>
-    <script src="/dist/build.js"></script>
+    <script src="dist/build.js"></script>
   </body>
 </html>
