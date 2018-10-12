@@ -28,11 +28,11 @@ export default {
   methods: {
     signIn: function() {
       firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(
-        function(user) {
-          alert('Well done! you are now connected!')
+        (user) => {
+          this.$router.replace('home');
         },
-        function(error) {
-          alert('Oops. ' + error.message)
+        (err) => {
+          alert('Oops. ' + error.message);
         }
       );
     }

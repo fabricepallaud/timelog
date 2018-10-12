@@ -27,11 +27,11 @@ export default {
   },
   methods: {
     signUp: function() {
-      firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(() => {
-          alert('Your account has been created!');
-          this.$store.commit('userConnectedUpdate', 'true');
+      firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(
+        (user) => {
+          this.$router.replace('home');
         },
-        function(error) {
+        (error) => {
           alert('Oops. ' + error.message)
         }
       );

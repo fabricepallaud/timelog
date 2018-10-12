@@ -21,8 +21,10 @@ export default new Vuex.Store({
     thisWeek() {
       this.state.currentWeek = moment(this.state.thisWeek).format('DD MMM');
     },
+    /*
     userConnectedUpdate(state, payload) {
       this.state.userConnected = payload;
     }
+    */
   }
 });

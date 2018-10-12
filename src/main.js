@@ -39,17 +39,5 @@ firebase.auth().onAuthStateChanged(function(user) {
   }
 });
 
-/* Main app */
-/*
-new Vue({
-  el: '#app',
-  store,
-  router,
-  components: {
-    UserStatus
-  }
-})
-*/
-
 /* Components */
 import UserStatus from './components/UserStatus.vue';
