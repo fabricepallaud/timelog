@@ -11,7 +11,7 @@ export default new Vuex.Store({
     thisWeek: moment().startOf('isoWeek'),
     currentWeek: moment().startOf('isoWeek'),
     userConnected: false,
-    newRowFormActive: false
+    //newRowFormActive: false
   },
   mutations: {
     nextWeek() {

@@ -74,21 +74,20 @@
 </template>
 
 <script>
-  /*
   import ProjectRow from './ProjectRow.vue';
   import Vue from 'vue';
   let ProjectRowClass = Vue.extend(ProjectRow);
   let ProjectRowInstance = new ProjectRowClass();
   ProjectRowInstance.$mount();
   this.$refs.container.appendChild(ProjectRowInstance.$el);
-  */
-  
+
   export default {
     data() {
       return {
         dialog: false
       }
     },
+    /*
     computed: {
       active() {
         return this.$store.state.newRowFormActive;
@@ -99,6 +98,7 @@
         this.$store.commit('newRowFormActive', false);
       }
     }
+    */
   }
 </script>
 

@@ -8,6 +8,7 @@
     <!--
     <project-row :project="1"></project-row>
     -->
+    <project-row :project="1"></project-row>
     <br>
     <button @click="newRow">New Row</button>
     <new-row-form></new-row-form>
