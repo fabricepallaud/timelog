@@ -1,9 +1,15 @@
 <template>
   <div class="login_status">
-    Status: <span>connected / not connected</span>
-    <router-link to="/Login">login</router-link>
-    <router-link to="/Signup">signup</router-link>
-    <a href="#" @click="logout">logout</a>
+    <!--<span v-if="userConnected">-->
+    <span>
+      Hi {{ userEmail }}!
+      <a href="#" @click="logout">logout</a>
+    </span>
+    <!--<span v-else>-->
+    <span>
+      <router-link to="/Login">login</router-link>
+      <router-link to="/Signup">signup</router-link>
+    </span>    
   </div>
 </template>
 
@@ -12,6 +18,17 @@ import firebase from 'firebase';
 
 export default {
   name: 'userstatus',
+  data() {
+    return {
+      userConnected: '',
+      userEmail: ''
+    }
+  },
+  mounted() {
+    this.userConnected = this.$store.state.userConnected;
+    this.userEmail = this.$store.state.userEmail;
+    //alert(this.userConnected);
+  },
   methods: {
     logout: function() {
       firebase.auth().signOut().then(() => {

@@ -30,8 +30,9 @@ export default {
       firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(
         (user) => {
           this.$router.replace('home');
+          this.$store.commit('setUserConnected', true);
         },
-        (err) => {
+        (error) => {
           alert('Oops. ' + error.message);
         }
       );

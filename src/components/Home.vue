@@ -1,16 +1,18 @@
 <template>
   <div>
     <nav>
-      <button @click="viewPreviousWeek"><</button>
-      <button @click="viewCurrentWeek">This week</button>
-      <button @click="viewNextWeek">></button>
+      <v-btn @click="viewPreviousWeek" dark>
+        <v-icon dark>keyboard_arrow_left</v-icon>
+      </v-btn>
+      <v-btn @click="viewCurrentWeek" dark>
+        THIS WEEK
+      </v-btn>
+      <v-btn @click="viewNextWeek" dark>
+        <v-icon dark>keyboard_arrow_right</v-icon>
+      </v-btn>
     </nav>
-    <!--
-    <project-row :project="1"></project-row>
-    -->
     <project-row :project="1"></project-row>
     <br>
-    <button @click="newRow">New Row</button>
     <new-row-form></new-row-form>
   </div>
 </template>
@@ -22,13 +24,6 @@ import ProjectRow from './ProjectRow.vue';
 
 export default {
   name: 'home',
-  /*
-  data: function() {
-    return {
-      newRowFormActive: false
-    }
-  },
-  */
   components: {
     ProjectRow,
     NewRowForm
@@ -43,12 +38,22 @@ export default {
     viewCurrentWeek: function() {
       this.$store.commit('thisWeek');
     },
-    newRow: function() {
-      this.$store.state.newRowFormActive = true;
-      this.$store.dispatch('addProject');
+    addProject() {
+      db.collection('project').add({
+        Name: 'Default project name',
+        Description: 'Default project decription'
+      })
+      .then(function(docRef) {
+        //console.log("Document written with ID: ", docRef.id);
+      })
+      .catch(function(error) {
+        //console.error("Error adding document: ", error);
+      });
     }
   }
 }
 </script>
 
-<style></style>
+<style>
+  
+</style>

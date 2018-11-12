@@ -3,16 +3,41 @@
   <head>
     <link href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons' rel="stylesheet">
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
     <title>timelog</title>
   </head>
   <body>
     <div id="app">
-      <header>
-        <router-link to="/"><h1>Timelog</h1></router-link>
-        <user-status></user-status>
-      </header>
-      <br>
-      <router-view></router-view>
+      <v-app>
+
+        <v-toolbar>
+          <v-toolbar-title>
+            <router-link to="/">TIMELOG</router-link>
+          </v-toolbar-title>
+          <v-spacer></v-spacer>
+          <user-status></user-status>
+          <v-spacer></v-spacer>
+          <v-toolbar-items>
+            <v-btn flat>
+              <router-link to="/projects">Projects</router-link>
+            </v-btn>
+            <v-btn flat>
+              Link Two
+            </v-btn>
+            <v-btn flat>
+              Link Three
+            </v-btn>
+          </v-toolbar-items>
+        </v-toolbar>
+
+        <v-content>
+          <v-container fluid>
+            <router-view></router-view>
+          </v-container>
+        </v-content>
+        <v-footer app></v-footer>
+
+      </v-app>
     </div>
     <script src="dist/build.js"></script>
   </body>

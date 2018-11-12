@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Home from '../components/Home.vue';
 import SignUp from '../components/SignUp.vue';
 import Login from '../components/Login.vue';
+import Projects from '../components/Projects.vue';
 import firebase from 'firebase';
 
 import Router from 'vue-router';
@@ -34,6 +35,11 @@ let router = new Router({
       meta: {
         requiresAuth: true
       }
+    },
+    {
+      path: '/projects',
+      name: 'Projects',
+      component: Projects
     }
   ]
 })
