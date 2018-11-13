@@ -30,28 +30,21 @@
             <v-card-text class="px-0">
               <v-subheader>
                 <h2>New Project</h2>
-              </v-subheader>              
-              <v-list class="height_auto">
-                <template>
-                  <v-divider></v-divider>
-                  <v-list-tile>
-                    <v-list-tile-content>
-                      <!--
-                      <v-form>
-                        <v-text-field
-                          v-model="clientName"
-                          label="Client Name"
-                        ></v-text-field>
-                        <v-text-field
-                          v-model="projectName"
-                          label="Project Name"
-                        ></v-text-field>
-                      </v-form>
-                      -->
-                    </v-list-tile-content>
-                  </v-list-tile>
-                </template>
-              </v-list>
+              </v-subheader>
+              <v-form>
+                <v-text-field
+                  v-model="clientName"
+                  label="Client Name"
+                ></v-text-field>
+                <v-text-field
+                  v-model="projectName"
+                  label="Project Name"
+                ></v-text-field>
+                <v-btn
+                  @click="submit"
+                >Save Project
+                </v-btn>
+              </v-form>
             </v-card-text>
           </v-card>
         </v-flex>
@@ -92,7 +85,7 @@
 </script>
 
 <style scoped>
-.height_auto .v-list__tile {
-  height: auto;
+form {
+  padding: 16px;
 }
 </style>

@@ -6,18 +6,28 @@
       </v-btn>
 
       <v-card>
+
         <v-card-title class="headline grey lighten-2" primary-title>
           New Row
         </v-card-title>
 
         <v-card-text>
           <div>
+            <!--
             <h4>Project</h4>
             <select>
               <option name="projet1" value="Project #1">Project #1</option>
               <option name="projet2" value="Project #2">Project #2</option>
             </select>
+            -->
+             <h4>Project</h4>
+            <v-select
+              :items="projects"
+              label="Select a Project"
+              solo
+            ></v-select>
           </div>
+          <!--
           <div>
             <h4>Task</h4>
             <select>
@@ -25,16 +35,21 @@
               <option name="task2" value="Task #2">Task #2</option>
             </select>
           </div>
+          -->
         </v-card-text>
 
         <v-divider></v-divider>
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" flat @click="dialog = false">
+          <v-btn color="success" @click="dialog = false">
             Save Row
           </v-btn>
+          <v-btn @click.native="dialog = false">
+            Close
+          </v-btn>
         </v-card-actions>
+
       </v-card>
     </v-dialog>
     <div ref="container"></div>
@@ -53,7 +68,8 @@
   export default {
     data() {
       return {
-        dialog: false
+        dialog: false,
+        projects: ['Project #1', 'Project #2', 'Project #3']
       }
     },
     created() {

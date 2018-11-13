@@ -10,8 +10,7 @@ export default new Vuex.Store({
     today: new Date(),
     thisWeek: moment().startOf('isoWeek'),
     currentWeek: moment().startOf('isoWeek'),
-    userConnected: false,
-    userEmail: ''
+    //userConnected: false
   },
   mutations: {
     nextWeek() {
@@ -26,9 +25,11 @@ export default new Vuex.Store({
     newRowFormActive(state, payload) {
       this.state.newRowFormActive = payload;
     },
+    /*
     setUserConnected(state, payload) {
       state.userConnected = payload;
     }
+    */
   },
   actions: {
     addProject() {
