@@ -10,7 +10,6 @@ export default new Vuex.Store({
     today: new Date(),
     thisWeek: moment().startOf('isoWeek'),
     currentWeek: moment().startOf('isoWeek'),
-    //userConnected: false
   },
   mutations: {
     nextWeek() {
@@ -25,11 +24,6 @@ export default new Vuex.Store({
     newRowFormActive(state, payload) {
       this.state.newRowFormActive = payload;
     },
-    /*
-    setUserConnected(state, payload) {
-      state.userConnected = payload;
-    }
-    */
   },
   actions: {
     addProject() {
@@ -38,10 +32,8 @@ export default new Vuex.Store({
         Description: 'Default project decription'
       })
       .then(function(docRef) {
-        //console.log("Document written with ID: ", docRef.id);
       })
       .catch(function(error) {
-        //console.error("Error adding document: ", error);
       });
     }
   }

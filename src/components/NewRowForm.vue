@@ -13,13 +13,6 @@
 
         <v-card-text>
           <div>
-            <!--
-            <h4>Project</h4>
-            <select>
-              <option name="projet1" value="Project #1">Project #1</option>
-              <option name="projet2" value="Project #2">Project #2</option>
-            </select>
-            -->
              <h4>Project</h4>
             <v-select
               :items="projects"
@@ -27,15 +20,6 @@
               solo
             ></v-select>
           </div>
-          <!--
-          <div>
-            <h4>Task</h4>
-            <select>
-              <option name="task1" value="Task #1">Task #1</option>
-              <option name="task2" value="Task #2">Task #2</option>
-            </select>
-          </div>
-          -->
         </v-card-text>
 
         <v-divider></v-divider>
@@ -57,38 +41,12 @@
 </template>
 
 <script>
-  /*
-  import ProjectRow from './ProjectRow.vue';
-  import Vue from 'vue';
-  let ProjectRowClass = Vue.extend(ProjectRow);
-  let ProjectRowInstance = new ProjectRowClass();
-  ProjectRowInstance.$mount();
-  this.$refs.container.appendChild(ProjectRowInstance.$el);
-  */
   export default {
     data() {
       return {
         dialog: false,
         projects: ['Project #1', 'Project #2', 'Project #3']
       }
-    },
-    created() {
-      //const bod = document.querySelector('.container');
-      const newTodo = document.createElement('div');
-      newTodo.setAttribute('ref', 'container');
-      newTodo.textContent = 'Do homework';
-      //bod.appendChild(newTodo);
-      //document.getElementById('app').appendChild(newTodo);
-      const bod = document.querySelector('body');
-      bod.appendChild(newTodo);
-
-      /*
-      var node = document.createElement("LI");                 // Create a <li> node
-      var textnode = document.createTextNode("Water");         // Create a text node
-      node.appendChild(textnode);                              // Append the text to <li>
-      document.getElementById("myList").appendChild(node);     // Append <li> to <ul> with id="myList"
-      */
-
     },
     methods: {
       newRow: function() {

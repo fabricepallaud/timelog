@@ -3,11 +3,11 @@
     <span v-if="userConnected">
       User connected
       <span class="dot_separator">•</span>
-      <a href="#" @click="logout">logout</a>
+      <a href="#" @click="logout">Log Out</a>
     </span>
     <span v-else>
-      <router-link to="/Login">login</router-link>
-      <router-link to="/Signup">signup</router-link>
+      <router-link to="/Login">Log In</router-link>
+      <router-link to="/Signup">Sign Up</router-link>
     </span>
   </div>
 </template>
@@ -35,7 +35,6 @@ export default {
   methods: {
     logout: function() {
       this.userConnected = false;
-      //this.$store.commit('setUserConnected', false);
       firebase.auth().signOut().then(() => {
         this.$router.replace('login');
       })
