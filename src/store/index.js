@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import {db} from '../firebase';
+
 Vue.use(Vuex);
 
 var moment = require('moment');
@@ -10,6 +10,7 @@ export default new Vuex.Store({
     today: new Date(),
     thisWeek: moment().startOf('isoWeek'),
     currentWeek: moment().startOf('isoWeek'),
+    userId: ''
   },
   mutations: {
     nextWeek() {
@@ -24,17 +25,8 @@ export default new Vuex.Store({
     newRowFormActive(state, payload) {
       this.state.newRowFormActive = payload;
     },
-  },
-  actions: {
-    addProject() {
-      db.collection('project').add({
-        Name: 'Default project name',
-        Description: 'Default project decription'
-      })
-      .then(function(docRef) {
-      })
-      .catch(function(error) {
-      });
+    setUserId(state, payload) {
+      this.state.userId = payload;
     }
   }
 });

@@ -39,7 +39,10 @@ let router = new Router({
     {
       path: '/projects',
       name: 'Projects',
-      component: Projects
+      component: Projects,
+      meta: {
+        requiresAuth: true
+      }
     }
   ]
 })

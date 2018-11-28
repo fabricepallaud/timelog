@@ -14,13 +14,19 @@ module.exports = {
         test: /\.css$/,
         use: [
           'vue-style-loader',
-          'css-loader'
+          'css-loader',
+          {
+          loader: 'sass-loader',
+          options: {}
+          }
         ],
-      },      {
+      },
+      {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
           loaders: {
+            //scss: 'style-loader!css-loader!sass-loader'
           }
           // other vue-loader options go here
         }
@@ -48,7 +54,8 @@ module.exports = {
   devServer: {
     historyApiFallback: true,
     noInfo: true,
-    overlay: true
+    overlay: true,
+    clientLogLevel: 'none'
   },
   performance: {
     hints: false

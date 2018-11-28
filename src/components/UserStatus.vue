@@ -35,6 +35,7 @@ export default {
   methods: {
     logout: function() {
       this.userConnected = false;
+      //this.$store.commit('setUserConnected', false);
       firebase.auth().signOut().then(() => {
         this.$router.replace('login');
       })

@@ -20,7 +20,6 @@ moment().format();
 import firebase from './firebase';
 
 let app;
-
 firebase.auth().onAuthStateChanged(function(user) {
   if (!app) {
     app = new Vue({

@@ -20,3 +20,5 @@ firestore.settings({
 });
 
 export var db = firestore;
+
+export var fb = firebase;
