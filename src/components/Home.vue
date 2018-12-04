@@ -14,83 +14,58 @@
     </nav>
 
     <table class="project-row" ref="container">
-
       <tr>
         <th></th>
         <th>
-          Mon<span>{{ mon }}</span>
+          Mon<span>{{ monShort }}</span>
         </th>
         <th>
-          Tue<span>{{ tue }}</span>
+          Tue<span>{{ tueShort }}</span>
         </th>
         <th>
-          Wed<span>{{ wed }}</span>
+          Wed<span>{{ wedShort }}</span>
         </th>
         <th>
-          Thu<span>{{ thu }}</span>
+          Thu<span>{{ thuShort }}</span>
         </th>
         <th>
-          Fri<span>{{ fri }}</span>
+          Fri<span>{{ friShort }}</span>
         </th>
         <th>
-          Sat<span>{{ sat }}</span>
+          Sat<span>{{ satShort }}</span>
         </th>
         <th>
-          Sun<span>{{ sun }}</span>
+          Sun<span>{{ sunShort }}</span>
         </th>
         <th></th>
         <th></th>
       </tr>
-
-      <!--
-      <project-row
-        :projectId="'1'"
-        :projectName="'project1'"
-        :task="'task1'"
-        :user="'user1'"
-        :mon="mon"
-        :tue="tue"
-        :wed="wed"
-        :thu="thu"
-        :fri="fri"
-        :sat="sat"
-        :sun="sun"
-      ></project-row>
-      -->
-
     </table>
 
     <table class="times-table-footer">
-
       <tr>
         <td>
           <new-row-form @newRow="newRow"></new-row-form>
         </td>
-        <td>
-          
+        <td>          
         </td>
         <td>
-
         </td>
         <td>
-
         </td>
         <td>
-
         </td>
         <td>
-
         </td>
         <td>
-
         </td>
         <td>
-
         </td>
-        <td></td>
-        <td></td>
+        <td>          
+        </td>
+        <td>          
+        </td>
       </tr>
-
     </table>    
 
   </div>
@@ -103,6 +78,7 @@ import ProjectRow from './ProjectRow.vue';
 import Vue from 'vue';
 import store from '../store';
 import { db, fb } from '../firebase';
+import { EventBus } from './event-bus.js';
 
 export default {
   name: 'home',
@@ -111,43 +87,133 @@ export default {
     NewRowForm
   },
   computed: {
-    mon: function() {
-      return moment(this.$store.state.currentWeek).format('DD MMM');
+    monRaw: function() {
+      return moment(this.$store.state.currentWeek);
     },
-    tue: function() {
-      return moment(this.mon).add(1, 'days').format('DD MMM');
+    monShort: function() {
+      return this.monRaw.format('DD MMM');
     },
-    wed: function() {
-      return moment(this.mon).add(2, 'days').format('DD MMM');
+    monLong: function() {
+      return this.monRaw.format('YMMDD');
     },
-    thu: function() {
-      return moment(this.mon).add(3, 'days').format('DD MMM');
+    tueRaw: function() {
+      return moment(this.monRaw).add(1, 'days');
     },
-    fri: function() {
-      return moment(this.mon).add(4, 'days').format('DD MMM');
+    tueShort: function() {
+      return this.tueRaw.format('DD MMM');
     },
-    sat: function() {
-      return moment(this.mon).add(5, 'days').format('DD MMM');
+    tueLong: function() {
+      return this.tueRaw.format('YMMDD');
     },
-    sun: function() {
-      return moment(this.mon).add(6, 'days').format('DD MMM');
+    wedRaw: function() {
+      return moment(this.monRaw).add(2, 'days');
+    },
+    wedShort: function() {
+      return this.wedRaw.format('DD MMM');
+    },
+    wedLong: function() {
+      return this.wedRaw.format('YMMDD');
+    },
+    thuRaw: function() {
+      return moment(this.monRaw).add(3, 'days');
+    },
+    thuShort: function() {
+      return this.thuRaw.format('DD MMM');
+    },
+    thuLong: function() {
+      return this.thuRaw.format('YMMDD');
+    },
+    friRaw: function() {
+      return moment(this.monRaw).add(4, 'days');
+    },
+    friShort: function() {
+      return this.friRaw.format('DD MMM');
+    },
+    friLong: function() {
+      return this.friRaw.format('YMMDD');
+    },
+    satRaw: function() {
+      return moment(this.monRaw).add(5, 'days');
+    },
+    satShort: function() {
+      return this.satRaw.format('DD MMM');
+    },
+    satLong: function() {
+      return this.satRaw.format('YMMDD');
+    },
+    sunRaw: function() {
+      return moment(this.monRaw).add(6, 'days');
+    },
+    sunShort: function() {
+      return this.sunRaw.format('DD MMM');
+    },
+    sunLong: function() {
+      return this.sunRaw.format('YMMDD');
     }
   },
   mounted() {
+    // Stores userID in store
     this.$store.commit('setUserId', fb.auth().currentUser.uid);
+
+    // On page load, get rows for that week & that user
+    let weekTimes = [];
+    var timesRef = db.collection('times');
+    var timesWeek = timesRef
+      .where('date', '>=', this.monLong)
+      .where('date', '<=', this.sunLong)
+      .where('userId', '==', this.$store.state.userId);
+    timesWeek.get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        weekTimes.push(doc.data());
+      });      
+
+      // Group entries for each [Project - Task] combination into separate arrays for each row
+      var grouped = {};
+      for (var weekTime of weekTimes) {
+        var key = `${weekTime.projectId}/${weekTime.taskId}`;
+        if (grouped[key] !== undefined) {
+          grouped[key].push(weekTime);
+        }
+        else {
+          grouped[key] = [weekTime];
+        }
+      }  
+      /*
+      console.log(grouped);
+      Object.values(grouped);
+      */
+      
+      // Populate row with times for that project, task & user
+      ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].forEach(day => {
+        const temp = weekTimes.find(x => x.date === this[day]);
+        if (temp) {
+          console.log('tutu');
+          this[day + 'Time'] = temp.hours;
+        }
+      });
+    })
+    .catch(function(error) {
+      console.log('Error getting documents: ', error);
+    });
+
+    /*
+    this.newRow('13', 'test', '23v24234v23', 'task', 'userId');
+    */
   },
   methods: {
     viewNextWeek: function() {
       this.$store.commit('nextWeek');
+      EventBus.$emit('goNextWeek', this.monRaw);
     },
     viewPreviousWeek: function() {
       this.$store.commit('previousWeek');
+      EventBus.$emit('goPreviousWeek', this.monRaw);
     },
     viewCurrentWeek: function() {
       this.$store.commit('thisWeek');
     },
     newRow: function(projectId, projectName, clientId, task, user) {
-      //alert(projectId + projectName + task + user);
       let ProjectRowClass = Vue.extend(ProjectRow);
       let ProjectRowInstance = new ProjectRowClass({
         store,
@@ -158,34 +224,18 @@ export default {
           projectName: projectName,
           clientId: clientId,
           task: task,
-          //user: this.$store.state.userId,
-          mon: this.mon,
-          tue: this.tue,
-          wed: this.wed,
-          thu: this.thu,
-          fri: this.fri,
-          sat: this.sat,
-          sun: this.sun,
-
+          mon: this.monLong,
+          tue: this.tueLong,
+          wed: this.wedLong,
+          thu: this.thuLong,
+          fri: this.friLong,
+          sat: this.satLong,
+          sun: this.sunLong
         }
       });
       ProjectRowInstance.$mount();
       this.$refs.container.appendChild(ProjectRowInstance.$el);
-    },
-    /*
-    addProject() {
-      db.collection('projects').add({
-        Name: 'Default project name',
-        Description: 'Default project decription'
-      })
-      .then(function(docRef) {
-        //console.log("Document written with ID: ", docRef.id);
-      })
-      .catch(function(error) {
-        //console.error("Error adding document: ", error);
-      });
     }
-    */
   }
 }
 </script>

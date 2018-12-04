@@ -73,7 +73,8 @@
                     <v-text-field
                       v-else
                       v-model="newProjectClientName"
-                      label="Client Name"                      
+                      label="Client Name"
+                      ref="clientname"
                     ></v-text-field>
        
                   </v-flex>
@@ -214,7 +215,7 @@ export default {
             // Reset form
             this.clientSelect = true;
             this.toggleClientButtonCaption = "New Client";
-            this.newProjectName = '';
+            this.newProjectName = '';            
           })
           .catch(function(error) {
             console.error("Error adding document: ", error);
@@ -227,14 +228,13 @@ export default {
     },
     toggleClient: function() {
       this.clientSelect = !this.clientSelect;
-      //this.toggleClientButtonCaption = this.clientSelect ? "New Client" : "Choose a Client";
       if (this.clientSelect) {
-        //this.newProjectName = '';
         this.toggleClientButtonCaption = "New Client";
       }
       else {
         this.newProjectClientName = '';
         this.toggleClientButtonCaption = "Choose a Client";
+        //this.$refs.clientname.focus();
       }
     },
     deleteProject: function(projectId, index) {

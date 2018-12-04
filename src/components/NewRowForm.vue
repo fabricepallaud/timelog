@@ -20,6 +20,7 @@
               item-text="projectName"
               item-value="projectId"
               solo
+              return-object
             ></v-select>
 
             <v-select
@@ -75,6 +76,7 @@ export default {
         }
         this.projects.push(data);
       });
+      //console.log(this.projects);
 
       // Initialize all selects on page load with first value of each array
       this.project = this.projects[0];
@@ -94,7 +96,13 @@ export default {
       console.log(this.$store.state.userId);
       */
       this.dialog = false;
-      this.$emit('newRow', this.project.projectId, this.project.projectName, this.project.clientId, this.task, this.$store.state.userId);
+      this.$emit(
+        'newRow', 
+        this.project.projectId, 
+        this.project.projectName, 
+        this.project.clientId, 
+        this.task, 
+        this.$store.state.userId);
     }
   }
 }
