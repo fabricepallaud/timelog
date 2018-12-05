@@ -76,7 +76,6 @@ export default {
         }
         this.projects.push(data);
       });
-      //console.log(this.projects);
 
       // Initialize all selects on page load with first value of each array
       this.project = this.projects[0];
@@ -88,19 +87,10 @@ export default {
   },
   methods: {
     newRow: function() {
-      /*
-      console.log(this.project.projectId);
-      console.log(this.project.projectName);
-      console.log('clientId = ' + this.project.clientId);
-      console.log(this.task);
-      console.log(this.$store.state.userId);
-      */
       this.dialog = false;
       this.$emit(
         'newRow', 
-        this.project.projectId, 
-        this.project.projectName, 
-        this.project.clientId, 
+        this.project.projectId,
         this.task, 
         this.$store.state.userId);
     }

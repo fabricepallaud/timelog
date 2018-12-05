@@ -169,27 +169,30 @@ export default {
       });      
 
       // Group entries for each [Project - Task] unique combination into separate arrays (for each row)
-      var grouped = {};
+      var rows = {};
       for (var weekTime of weekTimes) {
         var key = `${weekTime.projectId}/${weekTime.task}`;
-        if (grouped[key] !== undefined) {
-          grouped[key].push(weekTime);
+        if (rows[key] !== undefined) {
+          rows[key].push(weekTime);
         }
         else {
-          grouped[key] = [weekTime];
+          rows[key] = [weekTime];
         }
+      }
+      rows = Object.values(rows);
+
+      // Create a new instance of ProjectRow component for each row
+      for (var row of rows) {
+        this.newRow(
+          row[0].projectId,
+          row[0].task,
+          this.$store.state.userId
+        );
       }      
-      grouped = Object.values(grouped);
-      console.log(grouped);      
-      
     })
     .catch(function(error) {
       console.log('Error getting documents: ', error);
     });
-
-    /*
-    this.newRow('13', 'test', '23v24234v23', 'task', 'userId');
-    */
   },
   methods: {
     viewNextWeek: function() {
@@ -203,7 +206,7 @@ export default {
     viewCurrentWeek: function() {
       this.$store.commit('thisWeek');
     },
-    newRow: function(projectId, projectName, clientId, task, user) {
+    newRow: function(projectId, task, user) {
       let ProjectRowClass = Vue.extend(ProjectRow);
       let ProjectRowInstance = new ProjectRowClass({
         store,
@@ -211,8 +214,6 @@ export default {
         moment,
         propsData: {
           projectId: projectId,
-          projectName: projectName,
-          clientId: clientId,
           task: task,
           mon: this.monLong,
           tue: this.tueLong,

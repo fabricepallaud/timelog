@@ -46,8 +46,6 @@ import { EventBus } from './event-bus.js';
 export default {
   props: [
     'projectId',
-    'projectName',
-    'clientId',
     'task',
     'mon',
     'tue',
@@ -59,6 +57,8 @@ export default {
   ],
   data() {
     return {
+      projectName: '',
+      clientId: '',
       clientName: '',
       monTime: '',
       tueTime: '',
@@ -66,18 +66,8 @@ export default {
       thuTime: '',
       friTime: '',
       satTime: '',
-      sunTime: ''
-    }
-  },
-  computed: {
-    rowTotal: function() {
-      return parseInt(this.monTime)
-        + parseInt(this.tueTime)
-        + parseInt(this.wedTime)
-        + parseInt(this.thuTime)
-        + parseInt(this.friTime)
-        + parseInt(this.satTime)
-        + parseInt(this.sunTime);
+      sunTime: '',
+      rowTotal: ''
     }
   },
   methods: {
@@ -89,12 +79,6 @@ export default {
       .where('projectId', '==', this.projectId)
       .where('task', '==', this.task)
       .where('userId', '==', this.$store.state.userId);
-      /*
-      console.log(day);
-      console.log(this.task);
-      console.log(this.projectId);
-      console.log(this.$store.state.userId);
-      */
       timeDay.get()
       .then((querySnapshot) => {
         if (querySnapshot.size) { 
@@ -138,7 +122,7 @@ export default {
         }
       })
       .catch(function(error) {
-      });      
+      });
     },
     nextWeek: function() {
       alert('next week!');
@@ -156,11 +140,23 @@ export default {
       this.mon = moment(this.mon).subtract(1, 'weeks');
     });
 
-    // Get client for this project
-    var client = db.collection('clients').doc(this.clientId);
-    client.get().then((doc) => {
+    // Get client id & project name for this project
+    var project = db.collection('projects').doc(this.projectId);
+    project.get().then((doc) => {
       if (doc.exists) {
-        this.clientName = doc.data().name;
+        this.projectName = doc.data().name;
+        this.clientId = doc.data().clientId;
+
+        // Get client name for this project
+        var client = db.collection('clients').doc(this.clientId);
+        client.get().then((doc) => {
+          if (doc.exists) {
+            this.clientName = doc.data().name;
+          }
+        })
+        .catch(function(error) {
+          console.log("Error getting document:", error);
+        });
       }
     })
     .catch(function(error) {
@@ -182,13 +178,18 @@ export default {
         weekTimes.push(doc.data());
       });
       
-      // Populate row with times
+      // Populate row with times + total of times at the end of the row
+      var total = 0;
       ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].forEach(day => {
         const temp = weekTimes.find(x => x.date === this[day]);
         if (temp) {
           this[day + 'Time'] = temp.hours;
+          total += parseInt(temp.hours);
         }
       });
+
+      // Update total number of hours for that row
+      this.rowTotal = total;
     })
     .catch(function(error) {
       console.log('Error getting documents: ', error);
