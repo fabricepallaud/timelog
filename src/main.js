@@ -1,6 +1,11 @@
 /* Vue */
 import Vue from 'vue';
 
+/* Vuetify */
+import Vuetify from 'vuetify';
+import 'vuetify/dist/vuetify.min.css';
+Vue.use(Vuetify);
+
 /* VueX */
 import store from './store';
 
@@ -14,9 +19,19 @@ moment().format();
 /* Firebase */
 import firebase from './firebase';
 
-/* Main app */
-new Vue({
-  el: '#app',
-  store,
-  router
-})
+let app;
+firebase.auth().onAuthStateChanged(function(user) {
+  if (!app) {
+    app = new Vue({
+      el: '#app',
+      store,
+      router,
+      components: {
+        UserStatus
+      }
+    })
+  }
+});
+
+/* Components */
+import UserStatus from './components/UserStatus.vue';

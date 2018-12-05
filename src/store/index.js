@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+
 Vue.use(Vuex);
 
 var moment = require('moment');
@@ -8,7 +9,8 @@ export default new Vuex.Store({
   state: {
     today: new Date(),
     thisWeek: moment().startOf('isoWeek'),
-    currentWeek: moment().startOf('isoWeek')
+    currentWeek: moment().startOf('isoWeek'),
+    userId: ''
   },
   mutations: {
     nextWeek() {
@@ -19,6 +21,12 @@ export default new Vuex.Store({
     },
     thisWeek() {
       this.state.currentWeek = moment(this.state.thisWeek).format('DD MMM');
+    },
+    newRowFormActive(state, payload) {
+      this.state.newRowFormActive = payload;
+    },
+    setUserId(state, payload) {
+      this.state.userId = payload;
     }
   }
 });

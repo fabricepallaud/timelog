@@ -1,6 +1,5 @@
 .DS_Store
 node_modules/
-dist/
 npm-debug.log
 yarn-error.log
 
@@ -12,8 +11,8 @@ yarn-error.log
 *.sln
 __bk/
 node_modules/
-package.json
-package-lock.json
 .babelrc
 .editorconfig
+package.json
+package-lock.json
 webpack.config.js
