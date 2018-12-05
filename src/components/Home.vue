@@ -168,30 +168,20 @@ export default {
         weekTimes.push(doc.data());
       });      
 
-      // Group entries for each [Project - Task] combination into separate arrays for each row
+      // Group entries for each [Project - Task] unique combination into separate arrays (for each row)
       var grouped = {};
       for (var weekTime of weekTimes) {
-        var key = `${weekTime.projectId}/${weekTime.taskId}`;
+        var key = `${weekTime.projectId}/${weekTime.task}`;
         if (grouped[key] !== undefined) {
           grouped[key].push(weekTime);
         }
         else {
           grouped[key] = [weekTime];
         }
-      }  
-      /*
-      console.log(grouped);
-      Object.values(grouped);
-      */
+      }      
+      grouped = Object.values(grouped);
+      console.log(grouped);      
       
-      // Populate row with times for that project, task & user
-      ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].forEach(day => {
-        const temp = weekTimes.find(x => x.date === this[day]);
-        if (temp) {
-          console.log('tutu');
-          this[day + 'Time'] = temp.hours;
-        }
-      });
     })
     .catch(function(error) {
       console.log('Error getting documents: ', error);
