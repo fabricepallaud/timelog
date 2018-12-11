@@ -71,6 +71,44 @@ export default {
     }
   },
   methods: {
+    getRow: function(monday) {
+
+      // Get times for this user, this project & this task within current week
+      let weekTimes = [];
+      let sunday = moment(monday).add(6, 'days').format('YMMDD');
+      var timesRef = db.collection('times');
+      var timesWeek = timesRef
+        .where('date', '>=', monday)
+        .where('date', '<=', sunday)
+        .where('task', '==', this.task)
+        .where('projectId', '==', this.projectId)
+        .where('userId', '==', this.$store.state.userId);
+      timesWeek.get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          weekTimes.push(doc.data());
+        });
+        
+        // Populate row with times + total of times at the end of the row
+        var total = 0;
+        ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].forEach(day => {
+          const temp = weekTimes.find(x => x.date === this[day]);
+          if (temp) {
+            this[day + 'Time'] = temp.hours;
+            total += parseInt(temp.hours);
+          }
+          else {
+            this[day + 'Time'] = '';
+          }
+        });
+
+        // Update total number of hours for that row
+        this.rowTotal = total;
+      })
+      .catch(function(error) {
+        console.log('Error getting documents: ', error);
+      });
+    },
     addEntry: function(day, hours) {
 
       // Get time for that day, project, task & user
@@ -120,6 +158,15 @@ export default {
           });
 
         }
+
+        // Update total for this row
+        this.rowTotal = parseInt(this.monTime)
+          + parseInt(this.tueTime)
+          + parseInt(this.wedTime)
+          + parseInt(this.thuTime)
+          + parseInt(this.friTime)
+          + parseInt(this.satTime)
+          + parseInt(this.sunTime);
       })
       .catch(function(error) {
       });
@@ -130,14 +177,20 @@ export default {
   },
   mounted() {
 
-    // User clicked "Next Week" button (from Home.vue component)
-    EventBus.$on('goNextWeek', monRaw => {
-      this.mon = moment(this.mon).add(1, 'weeks');
-    });
+    // User used "Previous", "Current" or "Next Week" button (from Home.vue component)
+    EventBus.$on('changeWeek', monRaw => {
 
-    // User clicked "Last Week" button (from Home.vue component)
-    EventBus.$on('goPreviousWeek', monRaw => {
-      this.mon = moment(this.mon).subtract(1, 'weeks');
+      // Update all days of the week in the component's logic
+      this.mon = monRaw.format('YMMDD');
+      this.tue = moment(monRaw).add(1, 'days').format('YMMDD');
+      this.wed = moment(monRaw).add(2, 'days').format('YMMDD');
+      this.thu = moment(monRaw).add(3, 'days').format('YMMDD');
+      this.fri = moment(monRaw).add(4, 'days').format('YMMDD');
+      this.sat = moment(monRaw).add(5, 'days').format('YMMDD');
+      this.sun = moment(monRaw).add(6, 'days').format('YMMDD');
+
+      // Load time entries for that week
+      this.getRow(monRaw.format('YMMDD'));
     });
 
     // Get client id & project name for this project
@@ -164,36 +217,7 @@ export default {
     });
 
     // Get times for this user, this project & this task within this week
-    let weekTimes = [];
-    var timesRef = db.collection('times');
-    var timesWeek = timesRef
-      .where('date', '>=', this.mon)
-      .where('date', '<=', this.sun)
-      .where('task', '==', this.task)
-      .where('projectId', '==', this.projectId)
-      .where('userId', '==', this.$store.state.userId);
-    timesWeek.get()
-    .then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        weekTimes.push(doc.data());
-      });
-      
-      // Populate row with times + total of times at the end of the row
-      var total = 0;
-      ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].forEach(day => {
-        const temp = weekTimes.find(x => x.date === this[day]);
-        if (temp) {
-          this[day + 'Time'] = temp.hours;
-          total += parseInt(temp.hours);
-        }
-      });
-
-      // Update total number of hours for that row
-      this.rowTotal = total;
-    })
-    .catch(function(error) {
-      console.log('Error getting documents: ', error);
-    });
+    this.getRow(this.mon);
   }
 }
 </script>

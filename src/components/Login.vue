@@ -4,32 +4,33 @@
       Log In
     </h1>
 
-    <v-text-field
-      v-model="email"
-      label="Email"
-      placeholder="titi@titi.com"
-      box
-    >
-    </v-text-field>
-    
-    <v-text-field
-      v-model="password"
-      label="Password"
-      placeholder="tititi"
-      :type="'password'"
-      box
-    >
-    </v-text-field>
+    <v-form @submit="signUp">
+      <v-text-field
+        v-model="email"
+        label="Email"
+        placeholder="test@test.com"
+        box
+      >
+      </v-text-field>
+      
+      <v-text-field
+        v-model="password"
+        label="Password"
+        placeholder="password"
+        :type="'password'"
+        box
+      >
+      </v-text-field>
 
-    <v-checkbox
-      label="Remember me"
-      v-model="remember"
-    ></v-checkbox>
-    
-    <v-btn @click="signIn">
-      Sign In
-    </v-btn>
-
+      <v-checkbox
+        label="Remember me"
+        v-model="remember"
+      ></v-checkbox>
+      
+      <v-btn type="submit" @click="signIn">
+        Sign In
+      </v-btn>
+    </v-form>
   </div>
 </template>
 

@@ -5,34 +5,76 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
     <title>timelog</title>
+    <style>
+      body {
+        padding: 0;
+      }
+      [v-cloak] .app-content,
+      .spinner {
+        display: none;
+      }
+      [v-cloak] .spinner {
+        display: block;
+      }
+      /*  
+      [v-cloak] {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      [v-cloak] .spinner {
+        display: block;
+        width: 66px;
+        height: 66px;
+        background: red;
+        background-image: url(dist/spinner.gif);
+      }
+      */
+    </style>
   </head>
   <body>
+    
     <div id="app">
-      <v-app>
 
-        <v-toolbar>
-          <v-toolbar-title>
-            <router-link to="/">TIMELOG</router-link>
-          </v-toolbar-title>
-          <v-spacer></v-spacer>
-          <user-status></user-status>
-          <v-spacer></v-spacer>
-          <v-toolbar-items>
-            <v-btn flat>
-              <router-link to="/projects">Projects</router-link>
-            </v-btn>
-          </v-toolbar-items>
-        </v-toolbar>
+      <div v-cloak>
 
-        <v-content>
-          <v-container fluid>
-            <router-view></router-view>
-          </v-container>
-        </v-content>
-        
-        <v-footer app></v-footer>
+        <div class="spinner">Loading...</div>
 
-      </v-app>
+        <div class="app-content">
+
+          <v-app>
+
+            <v-toolbar>
+              <v-toolbar-title>
+                <router-link to="/">TIMELOG</router-link>
+              </v-toolbar-title>
+              <v-spacer></v-spacer>
+              <user-status></user-status>
+              <v-spacer></v-spacer>
+              <v-toolbar-items>
+                <v-btn flat>
+                  <router-link to="/projects">Projects</router-link>
+                </v-btn>
+              </v-toolbar-items>
+            </v-toolbar>
+
+            <v-content>
+              <v-container fluid>
+                <router-view></router-view>
+              </v-container>
+            </v-content>
+            
+            <v-footer app></v-footer>
+
+          </v-app>
+
+        </div> <!-- app-content -->
+
+      </div> <!-- v-cloak -->
+
     </div>
     <script src="dist/build.js"></script>
   </body>

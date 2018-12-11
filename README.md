@@ -6,4 +6,9 @@ The app is built with Vue.js, VueX and Vue-router. All user data is stored in Fi
 
 #### Demo
 
-A demo will become available by 7th of December 2018.
+http://fabricepallaud.com/timelog/
+
+How to use the demo:
+
+1. Login in (email: "test@test.com", password: "password") or sign up
+2. Create time entries, rows and navigate rows. You can also navigate projects on the "Projects" page.
