@@ -29,7 +29,6 @@
     <v-btn @click="signIn">
       Sign In
     </v-btn>
-
   </div>
 </template>
 

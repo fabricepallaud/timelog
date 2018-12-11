@@ -5,7 +5,7 @@
       <v-btn @click="viewPreviousWeek" dark>
         <v-icon dark>keyboard_arrow_left</v-icon>
       </v-btn>
-      <v-btn @click="viewCurrentWeek" dark>
+      <v-btn @click="viewThisWeek" dark>
         THIS WEEK
       </v-btn>
       <v-btn @click="viewNextWeek" dark>
@@ -86,10 +86,18 @@ export default {
     ProjectRow,
     NewRowForm
   },
+  data() {
+    return {
+      monRaw: moment().startOf('isoWeek'),
+      thisWeek: moment().startOf('isoWeek')
+    }
+  },
   computed: {
+    /*
     monRaw: function() {
-      return moment(this.$store.state.currentWeek);
+      return moment().startOf('isoWeek');
     },
+    */
     monShort: function() {
       return this.monRaw.format('DD MMM');
     },
@@ -155,7 +163,7 @@ export default {
     // Stores userID in store
     this.$store.commit('setUserId', fb.auth().currentUser.uid);
 
-    // On page load, get rows for that week & that user
+    // Get rows for that week & that user
     let weekTimes = [];
     var timesRef = db.collection('times');
     var timesWeek = timesRef
@@ -188,7 +196,7 @@ export default {
           row[0].task,
           this.$store.state.userId
         );
-      }      
+      }
     })
     .catch(function(error) {
       console.log('Error getting documents: ', error);
@@ -196,15 +204,16 @@ export default {
   },
   methods: {
     viewNextWeek: function() {
-      this.$store.commit('nextWeek');
-      EventBus.$emit('goNextWeek', this.monRaw);
+      this.monRaw = this.monRaw.add(1, 'weeks');
+      EventBus.$emit('changeWeek', this.monRaw);      
     },
     viewPreviousWeek: function() {
-      this.$store.commit('previousWeek');
-      EventBus.$emit('goPreviousWeek', this.monRaw);
+      this.monRaw = this.monRaw.subtract(1, 'weeks');
+      EventBus.$emit('changeWeek', this.monRaw);
     },
-    viewCurrentWeek: function() {
-      this.$store.commit('thisWeek');
+    viewThisWeek: function() {
+      this.monRaw = this.$store.state.thisWeek;
+      EventBus.$emit('changeWeek', this.monRaw);
     },
     newRow: function(projectId, task, user) {
       let ProjectRowClass = Vue.extend(ProjectRow);
@@ -226,6 +235,47 @@ export default {
       });
       ProjectRowInstance.$mount();
       this.$refs.container.appendChild(ProjectRowInstance.$el);
+    },
+    getRows: function(monday, sunday) {
+
+      // Get rows for that week & that user
+      let weekTimes = [];
+      var timesRef = db.collection('times');
+      var timesWeek = timesRef
+        .where('date', '>=', monday)
+        .where('date', '<=', sunday)
+        .where('userId', '==', this.$store.state.userId);
+      timesWeek.get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          weekTimes.push(doc.data());
+        });      
+
+        // Group entries for each [Project - Task] unique combination into separate arrays (for each row)
+        var rows = {};
+        for (var weekTime of weekTimes) {
+          var key = `${weekTime.projectId}/${weekTime.task}`;
+          if (rows[key] !== undefined) {
+            rows[key].push(weekTime);
+          }
+          else {
+            rows[key] = [weekTime];
+          }
+        }
+        rows = Object.values(rows);
+
+        // Create a new instance of ProjectRow component for each row
+        for (var row of rows) {
+          this.newRow(
+            row[0].projectId,
+            row[0].task,
+            this.$store.state.userId
+          );
+        }
+      })
+      .catch(function(error) {
+        console.log('Error getting documents: ', error);
+      });
     }
   }
 }

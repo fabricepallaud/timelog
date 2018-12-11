@@ -3,14 +3,33 @@
     <h1>
       Sign Up
     </h1>
-    <input type="text" v-model="email" placeholder="Email">
-    <br>
-    <input type="password" v-model="password" placeholder="Password">
-    <br>
-    <button @click="signUp">Sign Up</button>
-    <span>
-      Or go back to <router-link to="/Login">login</router-link>.
-    </span>
+
+    <v-form @submit="signUp">
+      <v-text-field
+        v-model="email"
+        label="Email"
+        placeholder="titi@titi.com"
+        box
+      >
+      </v-text-field>
+      
+      <v-text-field
+        v-model="password"
+        label="Password"
+        placeholder="tititi"
+        :type="'password'"
+        box
+      >
+      </v-text-field>
+      
+      <v-btn type="submit" @click="signUp">
+        Sign Up
+      </v-btn>
+      <span>
+        Or go back to <router-link to="/Login">Login</router-link>.
+      </span>
+    </v-form>
+    
   </div>
 </template>
 
