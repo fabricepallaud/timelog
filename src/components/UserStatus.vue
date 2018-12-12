@@ -1,31 +1,35 @@
 <template>
   <div class="login_status">
     <span v-if="userConnected">
-      User connected
+      {{ userEmail }}
       <span class="dot_separator">•</span>
       <a href="#" @click="logout">Log Out</a>
     </span>
     <span v-else>
-      <router-link to="/Login">Log In</router-link>
-      <router-link to="/Signup">Sign Up</router-link>
+      <router-link to="/Login">Login</router-link>
+      <span class="dot_separator">•</span>
+      <router-link to="/Signup">Signup</router-link>
     </span>
   </div>
 </template>
 
 <script>
 import firebase from 'firebase';
+import store from '../store';
 
 export default {
   name: 'userstatus',
   data() {
     return {
-      userConnected: ''
+      userConnected: '',
+      userEmail: ''
     }
   },
   mounted() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.userConnected = true;
+        this.userEmail = user.email;
       }
       else {
         this.userConnected = false;
@@ -35,7 +39,6 @@ export default {
   methods: {
     logout: function() {
       this.userConnected = false;
-      //this.$store.commit('setUserConnected', false);
       firebase.auth().signOut().then(() => {
         this.$router.replace('login');
       })

@@ -93,11 +93,6 @@ export default {
     }
   },
   computed: {
-    /*
-    monRaw: function() {
-      return moment().startOf('isoWeek');
-    },
-    */
     monShort: function() {
       return this.monRaw.format('DD MMM');
     },

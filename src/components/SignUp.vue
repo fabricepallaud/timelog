@@ -8,7 +8,6 @@
       <v-text-field
         v-model="email"
         label="Email"
-        placeholder="titi@titi.com"
         box
       >
       </v-text-field>
@@ -16,13 +15,12 @@
       <v-text-field
         v-model="password"
         label="Password"
-        placeholder="tititi"
         :type="'password'"
         box
       >
       </v-text-field>
       
-      <v-btn type="submit" @click="signUp">
+      <v-btn type="submit">
         Sign Up
       </v-btn>
       <span>
@@ -48,6 +46,7 @@ export default {
     signUp: function() {
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(
         (user) => {
+          this.$store.commit('setUserId', user.user.uid);
           this.$router.replace('home');
         },
         (error) => {

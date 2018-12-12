@@ -5,25 +5,25 @@
       {{ task }}
     </td>
     <td>
-      <v-text-field v-model="monTime" class="v-custom-text-field" outline @change="addEntry(mon, monTime)"></v-text-field>
+      <v-text-field v-model="monTime" class="v-custom-text-field" outline @change="addEntry(mon, monTime, 'monTime')"></v-text-field>
     </td>
     <td>
-      <v-text-field v-model="tueTime" class="v-custom-text-field" outline @change="addEntry(tue, tueTime)"></v-text-field>
+      <v-text-field v-model="tueTime" class="v-custom-text-field" outline @change="addEntry(tue, tueTime, 'tueTime')"></v-text-field>
     </td>
     <td class="today">
-      <v-text-field v-model="wedTime" class="v-custom-text-field" outline @change="addEntry(wed, wedTime)"></v-text-field>
+      <v-text-field v-model="wedTime" class="v-custom-text-field" outline @change="addEntry(wed, wedTime, 'wedTime')"></v-text-field>
     </td>
     <td>
-      <v-text-field v-model="thuTime" class="v-custom-text-field" outline @change="addEntry(thu, thuTime)"></v-text-field>
+      <v-text-field v-model="thuTime" class="v-custom-text-field" outline @change="addEntry(thu, thuTime, 'thuTime')"></v-text-field>
     </td>
     <td>
-      <v-text-field v-model="friTime" class="v-custom-text-field" outline @change="addEntry(fri, friTime)"></v-text-field>
+      <v-text-field v-model="friTime" class="v-custom-text-field" outline @change="addEntry(fri, friTime, 'friTime')"></v-text-field>
     </td>
     <td>
-      <v-text-field v-model="satTime" class="v-custom-text-field" outline @change="addEntry(sat, satTime)"></v-text-field>
+      <v-text-field v-model="satTime" class="v-custom-text-field" outline @change="addEntry(sat, satTime, 'satTime')"></v-text-field>
     </td>
     <td>
-      <v-text-field v-model="sunTime" class="v-custom-text-field" outline @change="addEntry(sun, sunTime)"></v-text-field>
+      <v-text-field v-model="sunTime" class="v-custom-text-field" outline @change="addEntry(sun, sunTime, 'sunTime')"></v-text-field>
     </td>
     <td class="rowTotal">
       {{ rowTotal }}
@@ -109,7 +109,7 @@ export default {
         console.log('Error getting documents: ', error);
       });
     },
-    addEntry: function(day, hours) {
+    addEntry: function(day, hours, dayInput) {
 
       // Get time for that day, project, task & user
       var timeDay = db.collection('times')
@@ -123,19 +123,31 @@ export default {
 
           // If there's already a time entry for this day, project, task and user, then update it
           querySnapshot.forEach((doc) => {
-            doc.ref.set(
-            {
-              hours: hours
-            },
-            {
-              merge: true
-            })
-            .then(function() {
-              //console.log("Document overriden with ID: ", doc.id);
-            })
-            .catch(function(error) {
-              console.error("Error adding document: ", error);
-            });
+
+            // If user entered 0, delete that entry
+            if (hours == 0) {
+              this[dayInput] = '';
+              doc.ref.delete().then(function() {
+              })
+              .catch(function(error) {
+                console.error("Error removing document: ", error);
+              });
+            }
+            else {
+              doc.ref.set(
+              {
+                hours: hours
+              },
+              {
+                merge: true
+              })
+              .then(function() {
+                //console.log("Document overriden with ID: ", doc.id);
+              })
+              .catch(function(error) {
+                console.error("Error adding document: ", error);
+              });
+            }
           });
 
         }
@@ -160,13 +172,11 @@ export default {
         }
 
         // Update total for this row
-        this.rowTotal = parseInt(this.monTime)
-          + parseInt(this.tueTime)
-          + parseInt(this.wedTime)
-          + parseInt(this.thuTime)
-          + parseInt(this.friTime)
-          + parseInt(this.satTime)
-          + parseInt(this.sunTime);
+        var total = 0;
+        ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].forEach(day => {
+          total += (parseInt(this[day + 'Time'])) ? parseInt(this[day + 'Time']) : 0;
+        });
+        this.rowTotal = (total) ? total : 0;
       })
       .catch(function(error) {
       });

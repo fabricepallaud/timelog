@@ -4,11 +4,10 @@
       Log In
     </h1>
 
-    <v-form @submit="signUp">
+    <v-form @submit="signIn">
       <v-text-field
         v-model="email"
         label="Email"
-        placeholder="test@test.com"
         box
       >
       </v-text-field>
@@ -16,7 +15,6 @@
       <v-text-field
         v-model="password"
         label="Password"
-        placeholder="password"
         :type="'password'"
         box
       >
@@ -27,7 +25,7 @@
         v-model="remember"
       ></v-checkbox>
       
-      <v-btn type="submit" @click="signIn">
+      <v-btn type="submit">
         Sign In
       </v-btn>
     </v-form>
@@ -48,6 +46,8 @@ export default {
   },
   methods: {
     signIn: function() {
+
+      // If "Remember" option is checked
       if (this.remember) {
         firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(
           () => {
@@ -70,11 +70,12 @@ export default {
           () => {
             firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(
               (user) => {
-                this.$store.commit('setUserId', user.uid);
+                this.$store.commit('setUserId', user.user.uid);
+                this.$store.commit('setUserEmail', this.email);
                 this.$router.replace('home');
               },
               (error) => {
-                console.log('Oops. ' + error.message);
+                alert('Oops. ' + error.message);
               }
             );
           })
