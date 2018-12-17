@@ -109,8 +109,7 @@ export default {
   },
   data() {
     return {
-      monRaw: moment().startOf('isoWeek'),
-      //thisWeek: moment().startOf('isoWeek')
+      monRaw: moment().startOf('isoWeek')
     }
   },
   computed: {
