@@ -1,8 +1,8 @@
 <template>
   <div>
     <v-dialog v-model="dialog" width="500">
-      <v-btn slot="activator" color="lighten-2" dark>
-        New Row
+      <v-btn slot="activator">
+        New Row<v-icon right>add_box</v-icon>
       </v-btn>
 
       <v-card>

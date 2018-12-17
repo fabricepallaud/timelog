@@ -26,7 +26,10 @@
                     </v-list-tile-content>
 
                     <v-list-tile-action>
-                      <v-icon @click="deleteProject(project.projectId, index)">delete</v-icon>
+                      <v-icon
+                        @click="deleteProject(project.projectId, index)"
+                        title="Delete Project"
+                      >delete</v-icon>
                     </v-list-tile-action>
 
                   </v-list-tile>
@@ -251,7 +254,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 @import '../styles/main.scss';
 
 form {

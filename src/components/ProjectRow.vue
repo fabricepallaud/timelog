@@ -1,35 +1,74 @@
 <template>
-  <tr>
+  <tr :class="loaded" v-if="rowActive">
     <td class="rowDescription">
       <strong>{{ projectName }}</strong> ({{ clientName }})<br>
       {{ task }}
     </td>
-    <td>
-      <v-text-field v-model="monTime" class="v-custom-text-field" outline @change="addEntry(mon, monTime, 'monTime')"></v-text-field>
+    <td :class="classObject(mon)">
+      <v-text-field
+        v-model="monTime"
+        class="v-custom-text-field"
+        outline
+        @change="addEntry(mon, monTime, 'monTime')"
+      ></v-text-field>
     </td>
-    <td>
-      <v-text-field v-model="tueTime" class="v-custom-text-field" outline @change="addEntry(tue, tueTime, 'tueTime')"></v-text-field>
+    <td :class="classObject(tue)">
+      <v-text-field
+        v-model="tueTime"
+        class="v-custom-text-field"
+        outline
+        @change="addEntry(tue, tueTime, 'tueTime')"
+      ></v-text-field>
     </td>
-    <td class="today">
-      <v-text-field v-model="wedTime" class="v-custom-text-field" outline @change="addEntry(wed, wedTime, 'wedTime')"></v-text-field>
+    <td :class="classObject(wed)">
+      <v-text-field
+        v-model="wedTime"
+        class="v-custom-text-field"
+        outline
+        @change="addEntry(wed, wedTime, 'wedTime')"
+      ></v-text-field>
     </td>
-    <td>
-      <v-text-field v-model="thuTime" class="v-custom-text-field" outline @change="addEntry(thu, thuTime, 'thuTime')"></v-text-field>
+    <td :class="classObject(thu)">
+      <v-text-field
+        v-model="thuTime"
+        class="v-custom-text-field"
+        outline
+        @change="addEntry(thu, thuTime, 'thuTime')"
+      ></v-text-field>
     </td>
-    <td>
-      <v-text-field v-model="friTime" class="v-custom-text-field" outline @change="addEntry(fri, friTime, 'friTime')"></v-text-field>
+    <td :class="classObject(fri)">
+      <v-text-field
+        v-model="friTime"
+        class="v-custom-text-field"
+        outline
+        @change="addEntry(fri, friTime, 'friTime')"
+      ></v-text-field>
     </td>
-    <td>
-      <v-text-field v-model="satTime" class="v-custom-text-field" outline @change="addEntry(sat, satTime, 'satTime')"></v-text-field>
+    <td :class="classObject(sat)">
+      <v-text-field
+        v-model="satTime"
+        class="v-custom-text-field"
+        outline
+        @change="addEntry(sat, satTime, 'satTime')"
+      ></v-text-field>
     </td>
-    <td>
-      <v-text-field v-model="sunTime" class="v-custom-text-field" outline @change="addEntry(sun, sunTime, 'sunTime')"></v-text-field>
+    <td :class="classObject(sun)">
+      <v-text-field
+        v-model="sunTime"
+        class="v-custom-text-field"
+        outline
+        @change="addEntry(sun, sunTime, 'sunTime')"
+      ></v-text-field>
     </td>
     <td class="rowTotal">
       {{ rowTotal }}
     </td>
     <td class="row">
-      <span class="pa-3">
+      <span
+        @click="deleteRow"
+        title="Delete Row"
+        class="delete-row"
+      >
         <v-icon small>delete</v-icon>
       </span>
     </td>
@@ -67,7 +106,16 @@ export default {
       friTime: '',
       satTime: '',
       sunTime: '',
-      rowTotal: ''
+      rowTotal: '',
+      loading: true,
+      rowActive: true
+    }
+  },
+  computed: {
+    loaded: function() {
+      return {
+        loaded: !this.loading
+      }
     }
   },
   methods: {
@@ -106,7 +154,7 @@ export default {
         this.rowTotal = total;
       })
       .catch(function(error) {
-        console.log('Error getting documents: ', error);
+        console.log("Error getting documents: ", error);
       });
     },
     addEntry: function(day, hours, dayInput) {
@@ -181,11 +229,65 @@ export default {
       .catch(function(error) {
       });
     },
-    nextWeek: function() {
-      alert('next week!');
+    classObject(day) {
+      return {
+        today: moment(this.$store.state.today).format('YMMDD') == day
+      };
+    },
+    deleteRow() {
+
+      // Remove entries for this row from Firebase
+      var timesRef = db.collection('times');
+      var timesWeek = timesRef
+        .where('date', '>=', this.mon)
+        .where('date', '<=', this.sun)
+        .where('task', '==', this.task)
+        .where('projectId', '==', this.projectId)
+        .where('userId', '==', this.$store.state.userId);
+      timesWeek.get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          doc.ref.delete();
+        });
+      })
+      .catch(function(error) {
+        console.log("Error getting documents: ", error);
+      });
+
+      // Remove row from DOM
+      this.rowActive = false;
     }
   },
-  mounted() {
+  mounted() {    
+
+    // Get client id & project name for this project
+    var project = db.collection('projects').doc(this.projectId);
+    project.get().then((doc) => {
+      if (doc.exists) {
+        this.projectName = doc.data().name;
+        this.clientId = doc.data().clientId;
+
+        // Get client name for this project
+        var client = db.collection('clients').doc(this.clientId);
+        client.get().then((doc) => {
+          if (doc.exists) {
+            this.clientName = doc.data().name;
+            
+            // Display the row
+            this.loading = false;
+          }
+        })
+        .catch(function(error) {
+          console.log("Error getting document:", error);
+        });
+      }
+    })
+    .catch(function(error) {
+      console.log("Error getting document:", error);
+    });
+
+    // Get times for this user, this project & this task within this week
+    this.getRow(this.mon);
 
     // User used "Previous", "Current" or "Next Week" button (from Home.vue component)
     EventBus.$on('changeWeek', monRaw => {
@@ -202,34 +304,19 @@ export default {
       // Load time entries for that week
       this.getRow(monRaw.format('YMMDD'));
     });
-
-    // Get client id & project name for this project
-    var project = db.collection('projects').doc(this.projectId);
-    project.get().then((doc) => {
-      if (doc.exists) {
-        this.projectName = doc.data().name;
-        this.clientId = doc.data().clientId;
-
-        // Get client name for this project
-        var client = db.collection('clients').doc(this.clientId);
-        client.get().then((doc) => {
-          if (doc.exists) {
-            this.clientName = doc.data().name;
-          }
-        })
-        .catch(function(error) {
-          console.log("Error getting document:", error);
-        });
-      }
-    })
-    .catch(function(error) {
-      console.log("Error getting document:", error);
-    });
-
-    // Get times for this user, this project & this task within this week
-    this.getRow(this.mon);
   }
 }
 </script>
 
-<style></style>
+<style scoped>
+td {
+  visibility: hidden;
+}
+
+tr.loaded td {
+  visibility: visible;
+}
+.delete-row {
+  cursor: pointer;
+} 
+</style>

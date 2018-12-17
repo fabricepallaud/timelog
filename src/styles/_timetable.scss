@@ -1,0 +1,102 @@
+.week-nav-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0 25px;
+}
+
+.week-title h1 {
+  margin-top: 5px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.times-table-footer td {
+  min-width: 44px;
+}
+
+.rowDescription {
+  font-size: 13px;
+}
+
+table span {
+  display: block;
+  font-weight: normal;
+}
+
+.project-row {
+  margin-top: 10px;
+  line-height: 1.4;
+}
+
+.times-table-footer td,
+th {
+  padding: 12px 8px;
+  background: $light_gray1;
+  text-shadow: 0 1px 0 $white;
+}
+
+th span {
+  font-size: 12px;
+}
+
+td {
+  padding: 12px 6px;
+}
+
+td.today {
+  background: $light_gray1;  
+}
+
+tr td:first-child,
+tr th:first-child {
+  width: 260px;
+}
+
+.rowTotal {
+  width: 40px;
+  text-align: right;
+  color: $light_gray3;
+}
+
+.project-row tr:first-child + tr td {
+  border: none;
+}
+
+.project-row td {
+  border-top: 1px solid $light_gray4;
+}
+
+.v-custom-text-field.v-text-field .v-input__slot {
+  padding: 0;
+  margin: 0;
+  min-height: 0;
+  border-width: 1px !important;
+  border-color: $light_gray2;
+  border-radius: 2px;
+}
+
+.v-custom-text-field.v-text-field input {
+  width: 40px;
+  padding: 10px 5px;
+  margin: 0;
+}
+
+.v-custom-text-field.v-text-field input:focus {
+  background: $yellow;
+}
+
+.v-text-field__details {
+  display: none;
+}
+
+.calendar-button.v-btn {
+  margin: 0 15px;
+}
+
+.calendar-button.v-btn .v-icon {
+  font-size: 20px;
+}

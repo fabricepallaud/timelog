@@ -1,40 +1,61 @@
 <template>
   <div>
 
-    <nav>
-      <v-btn @click="viewPreviousWeek" dark>
-        <v-icon dark>keyboard_arrow_left</v-icon>
-      </v-btn>
-      <v-btn @click="viewThisWeek" dark>
-        THIS WEEK
-      </v-btn>
-      <v-btn @click="viewNextWeek" dark>
-        <v-icon dark>keyboard_arrow_right</v-icon>
-      </v-btn>
-    </nav>
+    <div class="week-nav-bar">
+
+      <div class="week-title">
+        <h1>{{ weekTitle }}</h1>
+      </div>
+
+      <nav>
+        <v-btn @click="viewPreviousWeek" title="Previous Week">
+          <v-icon dark>keyboard_arrow_left</v-icon>
+        </v-btn>
+
+        <v-btn @click="viewThisWeek" color="grey lighten-2" title="Jump to This Week">
+          This week
+        </v-btn>
+
+        <v-btn @click="viewNextWeek" title="Next Week">
+          <v-icon dark>keyboard_arrow_right</v-icon>
+        </v-btn>
+
+        <v-btn class="calendar-button" @click="showCalendar" title="Change Date">
+          <v-icon dark>calendar_today</v-icon>
+        </v-btn>
+
+        <v-btn @click="switchDayMode" title="Day View">
+          Day
+        </v-btn>
+        <v-btn @click="switchWeekMode" color="Week View">
+          Week
+        </v-btn>
+      </nav>
+
+    </div>
 
     <table class="project-row" ref="container">
       <tr>
         <th></th>
-        <th>
+        <th title="Monday">
           Mon<span>{{ monShort }}</span>
         </th>
-        <th>
+        <th title="Tuesday">
           Tue<span>{{ tueShort }}</span>
         </th>
-        <th>
+        <th title="Wednesday">
           Wed<span>{{ wedShort }}</span>
         </th>
-        <th>
+        <th title="Thursday">
           Thu<span>{{ thuShort }}</span>
         </th>
-        <th>
+        <th title="Friday">
           Fri<span>{{ friShort }}</span>
         </th>
-        <th>
+        <th title="Saturday">
           Sat<span>{{ satShort }}</span>
         </th>
-        <th>
+        <th title="Sunday">
           Sun<span>{{ sunShort }}</span>
         </th>
         <th></th>
@@ -89,7 +110,7 @@ export default {
   data() {
     return {
       monRaw: moment().startOf('isoWeek'),
-      thisWeek: moment().startOf('isoWeek')
+      //thisWeek: moment().startOf('isoWeek')
     }
   },
   computed: {
@@ -152,58 +173,28 @@ export default {
     },
     sunLong: function() {
       return this.sunRaw.format('YMMDD');
+    },
+    weekTitle: function() {
+      return `${this.monRaw.format('DD')} - ${this.sunRaw.format('DD MMM Y')}`;
     }
   },
   mounted() {
+    
     // Stores userID in store
     this.$store.commit('setUserId', fb.auth().currentUser.uid);
 
-    // Get rows for that week & that user
-    let weekTimes = [];
-    var timesRef = db.collection('times');
-    var timesWeek = timesRef
-      .where('date', '>=', this.monLong)
-      .where('date', '<=', this.sunLong)
-      .where('userId', '==', this.$store.state.userId);
-    timesWeek.get()
-    .then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        weekTimes.push(doc.data());
-      });      
-
-      // Group entries for each [Project - Task] unique combination into separate arrays (for each row)
-      var rows = {};
-      for (var weekTime of weekTimes) {
-        var key = `${weekTime.projectId}/${weekTime.task}`;
-        if (rows[key] !== undefined) {
-          rows[key].push(weekTime);
-        }
-        else {
-          rows[key] = [weekTime];
-        }
-      }
-      rows = Object.values(rows);
-
-      // Create a new instance of ProjectRow component for each row
-      for (var row of rows) {
-        this.newRow(
-          row[0].projectId,
-          row[0].task,
-          this.$store.state.userId
-        );
-      }
-    })
-    .catch(function(error) {
-      console.log('Error getting documents: ', error);
-    });
+    // Get all rows for that week and user
+    this.getRows(this.monLong);
   },
   methods: {
     viewNextWeek: function() {
-      this.monRaw = this.monRaw.add(1, 'weeks');
-      EventBus.$emit('changeWeek', this.monRaw);      
+      const newValue = this.monRaw.clone().add(1, 'weeks');
+      this.monRaw = newValue;
+      EventBus.$emit('changeWeek', this.monRaw);
     },
     viewPreviousWeek: function() {
-      this.monRaw = this.monRaw.subtract(1, 'weeks');
+      const newValue = this.monRaw.clone().subtract(1, 'weeks');
+      this.monRaw = newValue;
       EventBus.$emit('changeWeek', this.monRaw);
     },
     viewThisWeek: function() {
@@ -231,10 +222,11 @@ export default {
       ProjectRowInstance.$mount();
       this.$refs.container.appendChild(ProjectRowInstance.$el);
     },
-    getRows: function(monday, sunday) {
+    getRows: function(monday) {
 
       // Get rows for that week & that user
       let weekTimes = [];
+      let sunday = moment(monday).add(6, 'days').format('YMMDD');
       var timesRef = db.collection('times');
       var timesWeek = timesRef
         .where('date', '>=', monday)
@@ -269,17 +261,22 @@ export default {
         }
       })
       .catch(function(error) {
-        console.log('Error getting documents: ', error);
+        console.log("Error getting documents: ", error);
       });
+    },
+    showCalendar: function() {
+      alert("Not supported yet, but will be VERY soon!");
+    },
+    switchDayMode: function() {
+      alert("Not supported yet, but will be VERY soon!");
+    },
+    switchWeekMode: function() {
+      alert("Not supported yet, but will be VERY soon!");
     }
   }
 }
 </script>
 
-<style>
-@import '../styles/main.scss';
-
-.project-row td {
-  border-top: 1px solid #ddd;
-}
+<style lang="scss">
+@import '../styles/main';
 </style>

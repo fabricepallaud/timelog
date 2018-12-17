@@ -1,86 +1,46 @@
-.project-row {
-  margin-top: 10px;  
-  line-height: 1.4;
-}
+@import '_variables.scss';
+@import '_timetable.scss';
 
-table {
-  border-collapse: collapse;
-}
-
-table span {
-  display: block;
-  font-weight: normal;
-}
-
-.times-table-footer td,
-th {
-  padding: 12px 8px;
-  background: #e8e8e8;
-  text-shadow: 0 1px 0 #fff;
-}
-
-.times-table-footer td {
-  min-width: 44px;
-}
-
-.times-table-footer,
-.project-row {
-  width: 800px;
-}
-
-th span {
-  font-size: 12px;
-}
-
-td {
-  padding: 2px 8px;
-}
-
-td.today {
-  background: #e8e8e8;
-}
-
-tr td:first-child,
-tr th:first-child {
-  width: 260px;
-}
-
-.rowDescription {  
-  font-size: 13px;
-}
-
-.rowTotal {
-  width: 60px;
-  text-align: right;
-}
-
-.project-row tr:first-child + tr td {
-  border: none;
-}
-
-.v-custom-text-field.v-text-field .v-input__slot {
-  padding: 0;
-  margin: 0;
-  min-height: 0;
-  border-width: 1px !important;
-  border-color: #bbb;
-  border-radius: 2px;
-}
-
-.v-custom-text-field.v-text-field input {
-  width: 41px;
-  padding: 2px 5px;
-  margin: 0;
-}
-
-.v-text-field__details {
-  display: none;
+.v-content {
+  max-width: 1020px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 button.v-btn {
-  margin-left: 0;
+  margin: 0;
+  text-transform: none;
+  min-width: 0;
 }
 
 .submit {
   margin-top: 10px;
+}
+
+nav {
+  font-size: 0;
+}
+
+nav div,
+nav span {
+  font-size: 16px;
+}
+
+nav .v-btn {
+  font-size: 16px;
+}
+
+h1 {
+  font-size: 23px;
+}
+
+.v-toolbar a {
+  color: $dark_gray1;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.v-toolbar a,
+.v-toolbar span {
+  font-size: 14px;
 }

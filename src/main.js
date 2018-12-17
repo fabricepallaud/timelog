@@ -19,6 +19,7 @@ moment().format();
 /* Firebase */
 import firebase from './firebase';
 
+/* Main Vue instance */
 let app;
 firebase.auth().onAuthStateChanged(function(user) {
   if (!app) {
@@ -28,6 +29,9 @@ firebase.auth().onAuthStateChanged(function(user) {
       router,
       components: {
         UserStatus
+      },
+      data: {
+        isLoading: true
       }
     })
   }

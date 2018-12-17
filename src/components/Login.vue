@@ -71,7 +71,6 @@ export default {
             firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(
               (user) => {
                 this.$store.commit('setUserId', user.user.uid);
-                this.$store.commit('setUserEmail', this.email);
                 this.$router.replace('home');
               },
               (error) => {

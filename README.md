@@ -10,5 +10,5 @@ http://fabricepallaud.com/timelog/
 
 #### How to use the demo:
 
-1. Sign up with a correctly formatted email address (can be fake) and a password (6 characters minimum)
+1. Sign up instantly - in a single step - with a correctly formatted email address (can be fake) + a password (6 characters minimum)
 2. Create time entries, rows and navigate rows. You can also navigate projects on the "Projects" page.
