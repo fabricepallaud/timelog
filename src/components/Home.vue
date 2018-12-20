@@ -27,7 +27,7 @@
         <v-btn @click="switchDayMode" title="Day View">
           Day
         </v-btn>
-        <v-btn @click="switchWeekMode" color="Week View">
+        <v-btn @click="switchWeekMode" color="grey lighten-2" title="Week View">
           Week
         </v-btn>
       </nav>

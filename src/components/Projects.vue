@@ -254,31 +254,31 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '../styles/main.scss';
 
 form {
   padding: 16px;
 }
 
-.select-project >>> .v-input__slot {
+.select-project .v-input__slot {
   margin-bottom: 15px;
 }
 
-.select-project >>> .v-text-field .v-input__control {
+.select-project .v-text-field .v-input__control {
   min-height: 36px;
 }
 
-.select-project >>> .new-project-client .v-btn {
+.select-project .new-project-client .v-btn {
   margin-top: 0;
 }
 
-.select-project >>> .v-input.v-text-field {
+.select-project .v-input.v-text-field {
   padding-top: 0;
   margin-top: 0;
 }
 
-.select-project >>> .new-project-client button {
+.select-project .new-project-client button {
   margin-left: 8px;
 }
 </style>

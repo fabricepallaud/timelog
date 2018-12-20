@@ -13,6 +13,5 @@ __bk/
 node_modules/
 .babelrc
 .editorconfig
-package.json
 package-lock.json
 webpack.config.js
