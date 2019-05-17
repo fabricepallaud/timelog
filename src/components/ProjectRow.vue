@@ -2,7 +2,7 @@
   <tr :class="loaded" v-if="rowActive">
     <td class="rowDescription">
       <strong>{{ projectName }}</strong> ({{ clientName }})<br>
-      {{ task }}
+      {{ taskName }}
     </td>
     <td :class="classObject(mon)">
       <v-text-field
@@ -85,7 +85,7 @@ import { EventBus } from './event-bus.js';
 export default {
   props: [
     'projectId',
-    'task',
+    'taskId',
     'mon',
     'tue',
     'wed',
@@ -97,6 +97,7 @@ export default {
   data() {
     return {
       projectName: '',
+      taskName: '',
       clientId: '',
       clientName: '',
       monTime: '',
@@ -128,7 +129,7 @@ export default {
       var timesWeek = timesRef
         .where('date', '>=', monday)
         .where('date', '<=', sunday)
-        .where('task', '==', this.task)
+        .where('taskId', '==', this.taskId)
         .where('projectId', '==', this.projectId)
         .where('userId', '==', this.$store.state.userId);
       timesWeek.get()
@@ -163,7 +164,7 @@ export default {
       var timeDay = db.collection('times')
       .where('date', '==', day)
       .where('projectId', '==', this.projectId)
-      .where('task', '==', this.task)
+      .where('taskId', '==', this.taskId)
       .where('userId', '==', this.$store.state.userId);
       timeDay.get()
       .then((querySnapshot) => {
@@ -197,7 +198,6 @@ export default {
               });
             }
           });
-
         }
         else {
 
@@ -207,7 +207,7 @@ export default {
             date: day,
             hours: hours,
             projectId: this.projectId,
-            task: this.task,
+            taskId: this.taskId,
             userId: this.$store.state.userId
           })
           .then(function(docRef) {
@@ -216,7 +216,6 @@ export default {
           .catch(function(error) {
             console.error("Error adding document: ", error);
           });
-
         }
 
         // Update total for this row
@@ -241,7 +240,7 @@ export default {
       var timesWeek = timesRef
         .where('date', '>=', this.mon)
         .where('date', '<=', this.sun)
-        .where('task', '==', this.task)
+        .where('taskId', '==', this.taskId)
         .where('projectId', '==', this.projectId)
         .where('userId', '==', this.$store.state.userId);
       timesWeek.get()
@@ -258,20 +257,20 @@ export default {
       this.rowActive = false;
     }
   },
-  mounted() {    
+  mounted() {
 
     // Get client id & project name for this project
     var project = db.collection('projects').doc(this.projectId);
     project.get().then((doc) => {
       if (doc.exists) {
-        this.projectName = doc.data().name;
+        this.projectName = doc.data().projectName;
         this.clientId = doc.data().clientId;
 
         // Get client name for this project
         var client = db.collection('clients').doc(this.clientId);
         client.get().then((doc) => {
           if (doc.exists) {
-            this.clientName = doc.data().name;
+            this.clientName = doc.data().clientName;
             
             // Display the row
             this.loading = false;
@@ -280,6 +279,17 @@ export default {
         .catch(function(error) {
           console.log("Error getting document:", error);
         });
+      }
+    })
+    .catch(function(error) {
+      console.log("Error getting document:", error);
+    });
+
+    // Get task name for this project task (information provided = task id)
+    var tasks = db.collection('tasks').doc(this.taskId);
+    tasks.get().then((doc) => {
+      if (doc.exists) {
+        this.taskName = doc.data().taskName;
       }
     })
     .catch(function(error) {

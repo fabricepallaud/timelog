@@ -26,7 +26,10 @@
             <v-select
               :items="tasks"
               v-model="task"
+              item-text="taskName"
+              item-value="taskId"
               solo
+              return-object
             ></v-select>
           </div>
         </v-card-text>
@@ -59,7 +62,7 @@ export default {
       dialog: false,
       projects: [],
       project: '',
-      tasks: ['Development', 'Design', 'Project management', 'Marketing'],
+      tasks: [],
       task: ''
     }
   },
@@ -71,14 +74,31 @@ export default {
       querySnapshot.forEach((doc) => {
         let data = {
           'projectId': doc.id,
-          'projectName': doc.data().name,
+          'projectName': doc.data().projectName,
           'clientId': doc.data().clientId
         }
         this.projects.push(data);
       });
 
-      // Initialize all selects on page load with first value of each array
+      // Initialize project select on page load with first value of each array
       this.project = this.projects[0];
+    })
+    .catch(function(error) {
+      console.log("Error getting documents: ", error);
+    });
+
+    // Populate 'tasks' array with tasks recorded in Firebase
+    db.collection('tasks').get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        let data = {
+          'taskId': doc.id,
+          'taskName': doc.data().taskName
+        }
+        this.tasks.push(data);
+      });
+
+      // Initialize project select on page load with first value of each array
       this.task = this.tasks[0];
     })
     .catch(function(error) {
@@ -91,7 +111,7 @@ export default {
       this.$emit(
         'newRow', 
         this.project.projectId,
-        this.task, 
+        this.task.taskId,
         this.$store.state.userId);
     }
   }

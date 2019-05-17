@@ -20,20 +20,18 @@ moment().format();
 import firebase from './firebase';
 
 /* Main Vue instance */
+import App from './App.vue';
 let app;
 firebase.auth().onAuthStateChanged(function(user) {
   if (!app) {
     app = new Vue({
-      el: '#app',
       store,
       router,
-      components: {
-        UserStatus
-      },
       data: {
         isLoading: true
-      }
-    })
+      },
+      render: h => h(App)
+    }).$mount('#app')
   }
 });
 
