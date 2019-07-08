@@ -1,22 +1,16 @@
-# timelog
+# Timelog
+Time-tracking app which attempts to replicate much of the UI/UX of the excellent Harvest app (https://www.getharvest.com/) for non-commercial, demo purposes only.
 
-> My sweet Nuxt.js project
+#### Details
+The app is built with Vue.js, Vuex & Vue-router. All user data is stored in Firebase. The UX is built with Vuetify. 
 
-## Build Setup
+Sidenotes: Times are handled by the Moment.js library. Rows are instances of the same component, programmatically instantiated as user adds new rows.
 
-``` bash
-# install dependencies
-$ npm install
+#### Demo URL
 
-# serve with hot reload at localhost:3000
-$ npm run dev
+http://fabricepallaud.com/timelog/
 
-# build for production and launch server
-$ npm run build
-$ npm start
+#### How to use the demo:
 
-# generate static project
-$ npm run generate
-```
-
-For detailed explanation on how things work, checkout [Nuxt.js docs](https://nuxtjs.org).
+1. Sign up instantly - in a single step - with a correctly formatted email address (can be fake) + a password (6 characters minimum)
+2. Create time entries, rows and navigate rows. You can also navigate projects on the "Projects" page.
