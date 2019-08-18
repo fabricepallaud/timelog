@@ -9,7 +9,8 @@ export default new Vuex.Store({
   state: {
     thisWeek: moment().startOf('isoWeek'),
     currentWeek: moment().startOf('isoWeek'),
-    userId: ''
+    userId: '',
+    TasksHavingRows: []
   },
   mutations: {
     setUserId(state, payload) {
@@ -18,5 +19,8 @@ export default new Vuex.Store({
     setCurrentWeek(state, payload) {
       this.state.currentWeek = payload;
     },
+    setTasksHavingRows(state, payload) {
+      this.state.TasksHavingRows.push(payload);
+    }
   }
 });

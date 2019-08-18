@@ -1,25 +1,25 @@
-/* Vue */
+// Vue
 import Vue from 'vue';
 
-/* Vuetify */
+// Vuetify
 import Vuetify from 'vuetify';
 import 'vuetify/dist/vuetify.min.css';
 Vue.use(Vuetify);
 
-/* VueX */
+// VueX
 import store from './store';
 
-/* Router */
+// Router
 import router from './router';
 
-/* Moment */
+// Moment
 var moment = require('moment');
 moment().format();
 
-/* Firebase */
+// Firebase
 import firebase from './firebase';
 
-/* Main Vue instance */
+// Main Vue instance
 import App from './App.vue';
 let app;
 firebase.auth().onAuthStateChanged(function(user) {
@@ -35,5 +35,9 @@ firebase.auth().onAuthStateChanged(function(user) {
   }
 });
 
-/* Components */
+// Toasted
+import Toasted from 'vue-toasted';
+Vue.use(Toasted)
+
+// Components
 import UserStatus from './components/UserStatus.vue';

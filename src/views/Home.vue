@@ -263,24 +263,6 @@ export default {
       });
       ProjectRowInstance.$mount();
       this.$refs.container.appendChild(ProjectRowInstance.$el);
-
-      // Add this project/task pair to this user in Firebase (userData collection)
-      /*
-      var userDataRef = db.collection('userdata');
-      userDataRef.add({
-        date: day,
-        hours: hours,
-        projectId: this.projectId,
-        taskId: this.taskId,
-        userId: this.$store.state.userId
-      })
-      .then(function(docRef) {
-        //console.log("Document written with ID: ", docRef.id);
-      })
-      .catch(function(error) {
-        console.error("Error adding document: ", error);
-      });
-      */
     },
     getRows: function(monday) {
 
@@ -289,8 +271,8 @@ export default {
       let sunday = moment(monday).add(6, 'days').format('YMMDD');
       var timesRef = db.collection('times');
       var timesWeek = timesRef
-        .where('date', '>=', monday)
-        .where('date', '<=', sunday)
+        // .where('date', '>=', monday)
+        // .where('date', '<=', sunday)
         .where('userId', '==', this.$store.state.userId);
       timesWeek.get()
       .then((querySnapshot) => {
@@ -319,7 +301,9 @@ export default {
             row[0].taskId,
             this.$store.state.userId
           );
+          this.$store.commit('setTasksHavingRows', { projectId: row[0].projectId, taskId: row[0].taskId });
         }
+        // console.log(this.$store.state.TasksHavingRows);
 
         // Potentially create extra instances for rows without data for current week
         /*

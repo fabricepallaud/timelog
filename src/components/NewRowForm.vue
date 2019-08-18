@@ -107,6 +107,11 @@ export default {
   },
   methods: {
     newRow: function() {
+      const TasksHavingRows = this.$store.state.TasksHavingRows;
+      const taskSelectedAlreadyHasRows = TasksHavingRows.filter(x => x.projectId === this.project.projectId && x.taskId === this.task.taskId);
+      if (taskSelectedAlreadyHasRows.length !== 0)
+        return
+
       this.dialog = false;
       this.$emit(
         'newRow', 

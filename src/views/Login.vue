@@ -83,6 +83,28 @@ export default {
           });
       }
     }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.email = 'fabrice@fabrice.com';
+      this.password = 'fabrice';
+      this.remember = true;
+      let toast = this.$toasted.show("Login & password fields populated for demo purposes.", { 
+        position: "bottom-right", 
+        duration : 50000
+      });
+    }, 2000);
+    
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.toasted .primary,
+.toasted.toasted-primary {
+  min-height: 58px;
+  line-height: 1.1em;
+  padding: 0 40px;
+  font-size: 16px;
+}
+</style>
