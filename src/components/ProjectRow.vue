@@ -149,7 +149,8 @@ export default {
         ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].forEach(day => {
           const temp = weekTimes.find(x => x.date === this[day]);
           if (temp) {
-            this[day + 'Time'] = temp.hours;
+            // this[day + 'Time'] = temp.hours;
+            this[day + 'Time'] = moment().startOf('day').add(temp.hours, 'hours').format('H:mm');
             total += parseInt(temp.hours);
           }
           else {
@@ -165,7 +166,6 @@ export default {
       });
     },
     addEntry: function(day, hours, dayInput) {
-      // this[dayInput] = this[dayInput].toString();
       if (hours.includes(':')) {
         hours = moment.duration(hours).asHours();
       }

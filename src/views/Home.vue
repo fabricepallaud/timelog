@@ -99,7 +99,7 @@ import ProjectRow from '../components/ProjectRow.vue';
 import Vue from 'vue';
 import store from '../store.js';
 import { db, fb } from '../firebase';
-import { EventBus } from '../components/event-bus.js';
+// import { EventBus } from '../components/event-bus.js';
 
 export default {
   name: 'home',
