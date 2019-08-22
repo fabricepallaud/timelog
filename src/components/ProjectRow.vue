@@ -7,6 +7,7 @@
     <td :class="classObject(mon)">
       <v-text-field
         v-model="monTime"
+        type="text"
         class="v-custom-text-field"
         outline
         @change="addEntry(mon, monTime, 'monTime')"
@@ -15,6 +16,7 @@
     <td :class="classObject(tue)">
       <v-text-field
         v-model="tueTime"
+        type="text"
         class="v-custom-text-field"
         outline
         @change="addEntry(tue, tueTime, 'tueTime')"
@@ -23,6 +25,7 @@
     <td :class="classObject(wed)">
       <v-text-field
         v-model="wedTime"
+        type="text"
         class="v-custom-text-field"
         outline
         @change="addEntry(wed, wedTime, 'wedTime')"
@@ -31,6 +34,7 @@
     <td :class="classObject(thu)">
       <v-text-field
         v-model="thuTime"
+        type="text"
         class="v-custom-text-field"
         outline
         @change="addEntry(thu, thuTime, 'thuTime')"
@@ -39,6 +43,7 @@
     <td :class="classObject(fri)">
       <v-text-field
         v-model="friTime"
+        type="text"
         class="v-custom-text-field"
         outline
         @change="addEntry(fri, friTime, 'friTime')"
@@ -47,6 +52,7 @@
     <td :class="classObject(sat)">
       <v-text-field
         v-model="satTime"
+        type="text"
         class="v-custom-text-field"
         outline
         @change="addEntry(sat, satTime, 'satTime')"
@@ -55,6 +61,7 @@
     <td :class="classObject(sun)">
       <v-text-field
         v-model="sunTime"
+        type="text"
         class="v-custom-text-field"
         outline
         @change="addEntry(sun, sunTime, 'sunTime')"
@@ -121,7 +128,6 @@ export default {
   },
   methods: {
     getRow: function(monday) {
-
       // Get times for this user, this project & this task within current week
       let weekTimes = [];
       let sunday = moment(monday).add(6, 'days').format('YMMDD');
@@ -159,6 +165,13 @@ export default {
       });
     },
     addEntry: function(day, hours, dayInput) {
+      // this[dayInput] = this[dayInput].toString();
+      if (hours.includes(':')) {
+        hours = moment.duration(hours).asHours();
+      }
+      else {
+        this[dayInput] = moment().startOf('day').add(hours, 'hours').format('H:mm');
+      }
 
       // Get time for that day, project, task & user
       var timeDay = db.collection('times')
@@ -168,13 +181,11 @@ export default {
       .where('userId', '==', this.$store.state.userId);
       timeDay.get()
       .then((querySnapshot) => {
-        if (querySnapshot.size) { 
-
+        if (querySnapshot.size) {
           // If there's already a time entry for this day, project, task and user, then update it
           querySnapshot.forEach((doc) => {
-
             // If user entered 0, delete that entry
-            if (hours == 0) {
+            if ((hours === 0) || (hours === '0:0') || (hours === '0:00') || (hours === '00:00')) {
               this[dayInput] = '';
               doc.ref.delete().then(function() {
               })
@@ -185,7 +196,7 @@ export default {
             else {
               doc.ref.set(
               {
-                hours: hours
+                hours: hours.toString()
               },
               {
                 merge: true
@@ -200,8 +211,7 @@ export default {
           });
         }
         else {
-
-          // If not entry was found, create a new one
+          // If no entry was found, create a new one
           var timesRef = db.collection('times');
           timesRef.add({
             date: day,
@@ -234,7 +244,6 @@ export default {
       };
     },
     deleteRow() {
-
       // Remove entries for this row from Firebase
       var timesRef = db.collection('times');
       var timesWeek = timesRef
@@ -258,7 +267,6 @@ export default {
     }
   },
   mounted() {
-
     // Get client id & project name for this project
     var project = db.collection('projects').doc(this.projectId);
     project.get().then((doc) => {

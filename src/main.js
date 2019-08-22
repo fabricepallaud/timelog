@@ -16,6 +16,9 @@ import router from './router';
 var moment = require('moment');
 moment().format();
 
+// Moment duration plugin
+// require("moment-duration-format");
+
 // Firebase
 import firebase from './firebase';
 
