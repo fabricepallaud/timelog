@@ -8,26 +8,56 @@
       </div>
 
       <nav>
-        <v-btn @click="viewPreviousWeek" title="Previous Week">
-          <v-icon dark>keyboard_arrow_left</v-icon>
+        <v-btn
+          @click="viewPreviousWeek"
+          title="Previous Week"
+          color="primary"
+          dark
+        >
+          <v-icon>
+            keyboard_arrow_left
+          </v-icon>
         </v-btn>
 
-        <v-btn @click="viewThisWeek" color="grey lighten-2" title="Jump to This Week">
+        <v-btn
+          @click="viewThisWeek"
+          title="Jump to This Week"
+        >
           This week
         </v-btn>
 
-        <v-btn @click="viewNextWeek" title="Next Week">
-          <v-icon dark>keyboard_arrow_right</v-icon>
+        <v-btn
+          @click="viewNextWeek"
+          title="Next Week"
+          color="primary"
+          dark
+        >
+          <v-icon>
+            keyboard_arrow_right
+          </v-icon>
         </v-btn>
 
-        <v-btn class="calendar-button" @click="showCalendar" title="Change Date">
-          <v-icon dark>calendar_today</v-icon>
+        <v-btn
+          class="calendar-button"
+          @click="showCalendar"
+          title="Change Date"
+        >
+          <v-icon dark>
+            calendar_today
+          </v-icon>
         </v-btn>
 
-        <v-btn @click="switchDayMode" title="Day View">
+        <v-btn
+          @click="switchDayMode"
+          title="Day View"
+        >
           Day
         </v-btn>
-        <v-btn @click="switchWeekMode" color="grey lighten-2" title="Week View">
+        <v-btn
+          @click="switchWeekMode"
+          color="grey lighten-2"
+          title="Week View"
+        >
           Week
         </v-btn>
       </nav>
@@ -67,6 +97,13 @@
       <tr>
         <td>
           <new-row-form @newRow="newRow"></new-row-form>
+          <!-- <v-btn
+            color="primary"
+            dark
+            @click.stop="showNewRoadDialog"
+          >
+            New Row<v-icon right>add_box</v-icon>
+          </v-btn> -->
         </td>
         <td>          
         </td>
@@ -97,7 +134,11 @@ import moment from 'moment';
 import NewRowForm from '../components/NewRowForm.vue';
 import ProjectRow from '../components/ProjectRow.vue';
 import Vue from 'vue';
-import store from '../store.js';
+// import store from '../store.js';
+import store from '@/store';
+// import store from '../store/';
+// import { mapState } from 'vuex'
+import { mapState } from 'vuex'
 import { db, fb } from '../firebase';
 // import { EventBus } from '../components/event-bus.js';
 
@@ -107,12 +148,24 @@ export default {
     ProjectRow,
     NewRowForm
   },
-  data() {
-    return {
-      monRaw: store.state.currentWeek
-    }
-  },
+  // data() {
+  //   return {
+  //     monRaw: store.state.currentWeek
+  //   }
+  // },
   computed: {
+    ...mapState({
+      // monRaw: {
+      //   get: function(state) {
+      //     return state.currentWeek;
+      //   },
+      //   set: function(value) {
+      //     return value;
+      //   }
+      // },
+      monRaw: state => state.time.currentWeek,
+      thisWeek: state => state.time.thisWeek
+    }),
     monShort: function() {
       return this.monRaw.format('DD MMM');
     },
@@ -183,11 +236,10 @@ export default {
     }
   },
   mounted() {
-    
-    // Stores userID in store
-    this.$store.commit('setUserId', fb.auth().currentUser.uid);
+    // // Stores userID in store
+    this.$store.commit('auth/setUserId', fb.auth().currentUser.uid);
 
-    // Get all rows for that week and user
+    // // Get all rows for that week and user
     this.getRows(this.monLong);
 
     // Update Home component's current week based on URL
@@ -195,9 +247,10 @@ export default {
     let routeMonth = this.$route.params.month;
     let routeDay = this.$route.params.day;
     if (routeYear && routeMonth && routeDay) {
-      this.monRaw = moment(routeYear + routeMonth + routeDay);
+      // this.monRaw = moment(routeYear + routeMonth + routeDay);
+      this.$store.commit('time/setCurrentWeek', moment(routeYear + routeMonth + routeDay));
     }
-
+    
     // Redirect to current week's route
     let year = this.monRaw.format('Y');
     let month = this.monRaw.format('MM');
@@ -208,12 +261,11 @@ export default {
   },
   methods: {
     updateWeek: function(newWeek) {
-
       // Update:
       // (1) store's currentWeek variable, as well as 
       // (2) Home component's current week to previous, this or next week
-      store.commit('setCurrentWeek', newWeek);
-      this.monRaw = newWeek;
+      this.$store.commit('time/setCurrentWeek', newWeek);
+      // this.monRaw = newWeek;
 
       // Redirect to route of updated current week (next week)
       let year = newWeek.format('Y');
@@ -224,25 +276,23 @@ export default {
       });
     },
     viewNextWeek: function() {
-
       // Update store + Home component with next week
-      let nextWeek = store.state.currentWeek.clone().add(1, 'weeks');
+      // let nextWeek = store.state.currentWeek.clone().add(1, 'weeks');
+      let nextWeek = this.monRaw.clone().add(1, 'weeks');
       this.updateWeek(nextWeek);
     },
     viewPreviousWeek: function() {
-
       // Update store + Home component with previous week
-      let previousWeek = store.state.currentWeek.clone().subtract(1, 'weeks');
+      // let previousWeek = store.state.currentWeek.clone().subtract(1, 'weeks');
+      let previousWeek = this.monRaw.clone().subtract(1, 'weeks');
       this.updateWeek(previousWeek);
     },
     viewThisWeek: function() {
-
       // Update store + Home component with this week
-      let thisWeek = store.state.thisWeek;
+      let thisWeek = store.state.time.thisWeek;
       this.updateWeek(thisWeek);
     },
     newRow: function(projectId, taskId, user) {
-
       // Create new instance of ProjectRow component for this project/task pair (and this user)
       let ProjectRowClass = Vue.extend(ProjectRow);
       let ProjectRowInstance = new ProjectRowClass({
@@ -265,7 +315,6 @@ export default {
       this.$refs.container.appendChild(ProjectRowInstance.$el);
     },
     getRows: function(monday) {
-
       // Get rows for that week & that user
       let weekTimes = [];
       let sunday = moment(monday).add(6, 'days').format('YMMDD');
@@ -301,17 +350,15 @@ export default {
             row[0].taskId,
             this.$store.state.userId
           );
-          this.$store.commit('setTasksHavingRows', { projectId: row[0].projectId, taskId: row[0].taskId });
+          this.$store.commit('time/setTasksHavingRows', { projectId: row[0].projectId, taskId: row[0].taskId });
         }
-        // console.log(this.$store.state.TasksHavingRows);
-
-        // Potentially create extra instances for rows without data for current week
-        /*
-        */
       })
       .catch(function(error) {
         console.log("Error getting documents: ", error);
       });
+    },
+    showNewRoadDialog: function() {
+      this.$store.commit('modal/setDialogState', true);
     },
     showCalendar: function() {
       alert("Not supported yet, but will be VERY soon!");

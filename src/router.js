@@ -80,18 +80,16 @@ router.beforeEach((to, from, next) => {
   }
   else {
     if (to.params.year && to.params.month && to.params.day) {
-
       // Make ProjectRow component instances update their own data
-      EventBus.$emit('changeWeek', store.state.currentWeek);
+      EventBus.$emit('changeWeek', store.state.time.currentWeek);
 
       // Update current week in store for week navigation buttons 
       const currentWeek = to.params.year + to.params.month + to.params.day;
-      store.commit('setCurrentWeek', moment(currentWeek));
+      store.commit('time/setCurrentWeek', moment(currentWeek));
     }
     else {
-
       // Make ProjectRow component instances update their own data
-      EventBus.$emit('changeWeek', store.state.thisWeek);
+      EventBus.$emit('changeWeek', store.state.time.thisWeek);
     }
     next();
   }

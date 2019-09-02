@@ -16,9 +16,6 @@ import router from './router';
 var moment = require('moment');
 moment().format();
 
-// Moment duration plugin
-// require("moment-duration-format");
-
 // Firebase
 import firebase from './firebase';
 
@@ -41,6 +38,10 @@ firebase.auth().onAuthStateChanged(function(user) {
 // Toasted
 import Toasted from 'vue-toasted';
 Vue.use(Toasted)
+
+// V-tooltip
+import VTooltip from 'v-tooltip';
+Vue.use(VTooltip);
 
 // Components
 import UserStatus from './components/UserStatus.vue';

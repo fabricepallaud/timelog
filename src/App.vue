@@ -1,13 +1,11 @@
 <template>
   <div id="app">
-
     <div v-cloak>
 
       <!-- Spinner appears temporarily while app loads -->
       <div class="spinner"></div>
 
       <div class="app-content" v-cloak>
-
         <v-app>
 
           <v-toolbar color="light-blue lighten-5">
@@ -37,22 +35,24 @@
           
           <!--<v-footer app></v-footer>-->
 
-        </v-app>
+          <modal />
 
+        </v-app>
       </div> <!-- /app-content -->
 
     </div> <!-- /v-cloak -->
-
   </div>
 </template>
 
 <script>
 import UserStatus from './components/UserStatus.vue';
+import Modal from './components/Modal.vue';
 import Home from './views/Home.vue';
 
 export default {
   components: {
-    UserStatus
+    UserStatus,
+    Modal
   },
   methods: {
     goToHome: function() {

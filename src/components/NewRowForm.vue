@@ -1,12 +1,23 @@
 <template>
   <div>
+    <v-btn
+      color="primary"
+      dark
+      @click.stop="dialog = true"
+    >
+      New Row<v-icon right>add_box</v-icon>
+    </v-btn>
+    
     <v-dialog v-model="dialog" width="500">
-      <v-btn slot="activator">
+      <!-- <v-btn
+        slot="activator"
+        color="primary"
+        dark
+      >
         New Row<v-icon right>add_box</v-icon>
-      </v-btn>
+      </v-btn> -->
 
       <v-card>
-
         <v-card-title class="headline grey lighten-2" primary-title>
           New Row
         </v-card-title>
@@ -45,7 +56,6 @@
             Close
           </v-btn>
         </v-card-actions>
-
       </v-card>
     </v-dialog>
   </div>
@@ -67,7 +77,6 @@ export default {
     }
   },
   mounted() {
-
     // Populate 'projects' array with projects recorded in Firebase
     db.collection('projects').get()
     .then((querySnapshot) => {
@@ -107,7 +116,8 @@ export default {
   },
   methods: {
     newRow: function() {
-      const TasksHavingRows = this.$store.state.TasksHavingRows;
+      // if time entries already exist for that project/task combo, prevent submit 
+      const TasksHavingRows = this.$store.state.time.TasksHavingRows;
       const taskSelectedAlreadyHasRows = TasksHavingRows.filter(x => x.projectId === this.project.projectId && x.taskId === this.task.taskId);
       if (taskSelectedAlreadyHasRows.length !== 0)
         return
@@ -118,6 +128,9 @@ export default {
         this.project.projectId,
         this.task.taskId,
         this.$store.state.userId);
+
+      // register project/task combo in store 
+      this.$store.commit('time/setTasksHavingRows', { projectId: this.project.projectId, taskId: this.task.taskId });
     }
   }
 }

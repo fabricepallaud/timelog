@@ -8,7 +8,13 @@
       <v-text-field
         v-model="email"
         label="Email"
+        :disabled="inputDisabled"
         box
+        v-tooltip="{
+          content: 'Demo credentials added (normal sign in/up still possible)',
+          show: showTooltip,
+          trigger: 'manual'
+        }"
       >
       </v-text-field>
       
@@ -16,6 +22,7 @@
         v-model="password"
         label="Password"
         :type="'password'"
+        :disabled="inputDisabled"
         box
       >
       </v-text-field>
@@ -25,7 +32,11 @@
         v-model="remember"
       ></v-checkbox>
       
-      <v-btn type="submit">
+      <v-btn
+        type="submit"
+        color="primary"
+        dark
+      >
         Sign In
       </v-btn>
     </v-form>
@@ -41,7 +52,9 @@ export default {
     return {
       email: '',
       password: '',
-      remember: false
+      remember: false,
+      inputDisabled: true,
+      showTooltip: false
     }
   },
   methods: {
@@ -89,11 +102,12 @@ export default {
       this.email = 'fabrice@fabrice.com';
       this.password = 'fabrice';
       this.remember = true;
-      let toast = this.$toasted.show("Login & password fields populated for demo purposes.", { 
-        position: "bottom-right", 
-        duration : 50000
-      });
-    }, 2000);
+      this.inputDisabled = false;
+      this.showTooltip = true;
+      setTimeout(() => {
+        this.showTooltip = false;
+      }, 3000); 
+    }, 1000);
     
   }
 }
