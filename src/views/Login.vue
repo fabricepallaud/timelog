@@ -106,7 +106,7 @@ export default {
       this.showTooltip = true;
       setTimeout(() => {
         this.showTooltip = false;
-      }, 3000); 
+      }, 4000); 
     }, 1000);
     
   }
